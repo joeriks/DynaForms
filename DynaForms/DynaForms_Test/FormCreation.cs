@@ -29,7 +29,7 @@ namespace DynaForms_Test
             var assemblyFile = new System.IO.FileInfo(this.GetType().Assembly.Location);
             var form1 = assemblyFile.DirectoryName + "\\form1.htm";
 
-            //System.IO.File.WriteAllText(@"D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms_Test\resources\form1.htm", f.Html().ToString());
+            //System.IO.File.WriteAllText(@"C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms_Test\resources\form1.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText(form1);            
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }
@@ -50,7 +50,7 @@ namespace DynaForms_Test
              .AddFormField("dropdown", type:DynaForm.FormField.InputType.select, dropDownValues: dropDownValues)
              .AddFormField("submit", type:DynaForm.FormField.InputType.submit);
 
-            //System.IO.File.WriteAllText(@"D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms_Test\resources\form2.htm", f.Html().ToString());
+            //System.IO.File.WriteAllText(@"C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms_Test\resources\form2.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText("form2.htm");
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }

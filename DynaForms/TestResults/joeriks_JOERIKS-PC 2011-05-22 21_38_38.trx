@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="072265fe-d805-4b3f-ba98-c55fb1ac3298" name="joeriks@JOERIKS-PC 2011-05-22 21:38:38" runUser="joeriks-PC\joeriks" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="b530b1a5-b516-4526-823a-1e2ca9acd328">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment runDeploymentRoot="joeriks_JOERIKS-PC 2011-05-22 21_38_38">
+      <DeploymentItem filename="C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific>
+        <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
+          <AssemblyResolution>
+            <TestDirectory useLoadContext="true" />
+          </AssemblyResolution>
+        </UnitTestRunConfig>
+      </TestTypeSpecific>
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-05-22T21:38:38.6946679+02:00" queuing="2011-05-22T21:38:38.8646777+02:00" start="2011-05-22T21:38:38.8856789+02:00" finish="2011-05-22T21:38:39.7577287+02:00" />
+  <ResultSummary outcome="Completed">
+    <Counters total="8" executed="8" passed="8" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="FormValidation_OneValidField_ShouldValidate" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="0a7bcf73-3d45-3e27-e291-8c41dcb2a8b3">
+      <Execution id="6594fbee-1ba9-4235-a28d-3bf0d27d52be" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.FormValidations, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="FormValidation_OneValidField_ShouldValidate" />
+    </UnitTest>
+    <UnitTest name="FormCreationHtml_CompareToFile_Form1" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="a63afa6a-845a-987f-c080-ffe79a3cc273">
+      <DeploymentItems>
+        <DeploymentItem filename="resources//form1.htm" />
+      </DeploymentItems>
+      <Execution id="344eec93-a6f2-4486-8f46-b2eab398f056" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.FormCreation, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="FormCreationHtml_CompareToFile_Form1" />
+    </UnitTest>
+    <UnitTest name="FormCreation_NoErrors" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="a72d1d0f-024c-ca45-f0cb-1e02f50ddf2c">
+      <Execution id="8fc28c06-510c-4cc7-888d-cbd700604eef" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.FormCreation, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="FormCreation_NoErrors" />
+    </UnitTest>
+    <UnitTest name="FormCreationHtml_CompareToFile_Form2" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="d5566312-6562-b3a8-7247-62759f535e6f">
+      <DeploymentItems>
+        <DeploymentItem filename="resources//form2.htm" />
+      </DeploymentItems>
+      <Execution id="2f7da7f3-c4ec-4363-b6f7-d9a69de82780" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.FormCreation, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="FormCreationHtml_CompareToFile_Form2" />
+    </UnitTest>
+    <UnitTest name="TryUpdateModel_SubsetOfFields" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="a4b991da-175b-341c-3346-146464a1b188">
+      <Execution id="af82be36-f3d5-44c2-aec6-d91640988fb9" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.TryUpdateModel, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TryUpdateModel_SubsetOfFields" />
+    </UnitTest>
+    <UnitTest name="FormValidation_OneMissingField_ShouldNotValidate" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="c68031b1-18f1-f361-10ac-2b2b73aca0e5">
+      <Execution id="b1c977d9-d147-4366-9f39-77293683a2d8" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.FormValidations, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="FormValidation_OneMissingField_ShouldNotValidate" />
+    </UnitTest>
+    <UnitTest name="TryUpdateModel_StringsAndInvalidInteger" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="04591405-bf95-3ad7-ff0f-82f6239b8357">
+      <Execution id="65257881-a4ad-420d-ac7c-1a3332a4dde1" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.TryUpdateModel, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TryUpdateModel_StringsAndInvalidInteger" />
+    </UnitTest>
+    <UnitTest name="TryUpdateModel_StringsAndInteger" storage="c:\users\joeriks\documents\visual studio 2010\projects\github\dynaforms\dynaforms\dynaforms_test\bin\debug\dynamicforms_test.dll" id="1a36a090-4025-e27d-39e4-17d8afe625b3">
+      <Execution id="d0a2e684-c525-4d15-a33c-3aecf866ab90" />
+      <TestMethod codeBase="C:/Users/joeriks/Documents/Visual Studio 2010/Projects/GitHub/DynaForms/DynaForms/DynaForms_Test/bin/Debug/DynamicForms_Test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="DynaForms_Test.TryUpdateModel, DynamicForms_Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TryUpdateModel_StringsAndInteger" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="04591405-bf95-3ad7-ff0f-82f6239b8357" executionId="65257881-a4ad-420d-ac7c-1a3332a4dde1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0a7bcf73-3d45-3e27-e291-8c41dcb2a8b3" executionId="6594fbee-1ba9-4235-a28d-3bf0d27d52be" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1a36a090-4025-e27d-39e4-17d8afe625b3" executionId="d0a2e684-c525-4d15-a33c-3aecf866ab90" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4b991da-175b-341c-3346-146464a1b188" executionId="af82be36-f3d5-44c2-aec6-d91640988fb9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a63afa6a-845a-987f-c080-ffe79a3cc273" executionId="344eec93-a6f2-4486-8f46-b2eab398f056" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a72d1d0f-024c-ca45-f0cb-1e02f50ddf2c" executionId="8fc28c06-510c-4cc7-888d-cbd700604eef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c68031b1-18f1-f361-10ac-2b2b73aca0e5" executionId="b1c977d9-d147-4366-9f39-77293683a2d8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d5566312-6562-b3a8-7247-62759f535e6f" executionId="2f7da7f3-c4ec-4363-b6f7-d9a69de82780" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="65257881-a4ad-420d-ac7c-1a3332a4dde1" testId="04591405-bf95-3ad7-ff0f-82f6239b8357" testName="TryUpdateModel_StringsAndInvalidInteger" computerName="JOERIKS-PC" duration="00:00:00.1274578" startTime="2011-05-22T21:38:38.8936793+02:00" endTime="2011-05-22T21:38:39.3487053+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="65257881-a4ad-420d-ac7c-1a3332a4dde1">
+    </UnitTestResult>
+    <UnitTestResult executionId="6594fbee-1ba9-4235-a28d-3bf0d27d52be" testId="0a7bcf73-3d45-3e27-e291-8c41dcb2a8b3" testName="FormValidation_OneValidField_ShouldValidate" computerName="JOERIKS-PC" duration="00:00:00.0038798" startTime="2011-05-22T21:38:39.3737068+02:00" endTime="2011-05-22T21:38:39.3947080+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6594fbee-1ba9-4235-a28d-3bf0d27d52be">
+    </UnitTestResult>
+    <UnitTestResult executionId="d0a2e684-c525-4d15-a33c-3aecf866ab90" testId="1a36a090-4025-e27d-39e4-17d8afe625b3" testName="TryUpdateModel_StringsAndInteger" computerName="JOERIKS-PC" duration="00:00:00.0014474" startTime="2011-05-22T21:38:39.4047085+02:00" endTime="2011-05-22T21:38:39.4217095+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d0a2e684-c525-4d15-a33c-3aecf866ab90">
+    </UnitTestResult>
+    <UnitTestResult executionId="af82be36-f3d5-44c2-aec6-d91640988fb9" testId="a4b991da-175b-341c-3346-146464a1b188" testName="TryUpdateModel_SubsetOfFields" computerName="JOERIKS-PC" duration="00:00:00.0006975" startTime="2011-05-22T21:38:39.4377104+02:00" endTime="2011-05-22T21:38:39.4457109+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af82be36-f3d5-44c2-aec6-d91640988fb9">
+    </UnitTestResult>
+    <UnitTestResult executionId="344eec93-a6f2-4486-8f46-b2eab398f056" testId="a63afa6a-845a-987f-c080-ffe79a3cc273" testName="FormCreationHtml_CompareToFile_Form1" computerName="JOERIKS-PC" duration="00:00:00.0251212" startTime="2011-05-22T21:38:39.4517112+02:00" endTime="2011-05-22T21:38:39.4927136+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="344eec93-a6f2-4486-8f46-b2eab398f056">
+    </UnitTestResult>
+    <UnitTestResult executionId="8fc28c06-510c-4cc7-888d-cbd700604eef" testId="a72d1d0f-024c-ca45-f0cb-1e02f50ddf2c" testName="FormCreation_NoErrors" computerName="JOERIKS-PC" duration="00:00:00.0011389" startTime="2011-05-22T21:38:39.5147148+02:00" endTime="2011-05-22T21:38:39.5387162+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8fc28c06-510c-4cc7-888d-cbd700604eef">
+    </UnitTestResult>
+    <UnitTestResult executionId="b1c977d9-d147-4366-9f39-77293683a2d8" testId="c68031b1-18f1-f361-10ac-2b2b73aca0e5" testName="FormValidation_OneMissingField_ShouldNotValidate" computerName="JOERIKS-PC" duration="00:00:00.0060472" startTime="2011-05-22T21:38:39.5437165+02:00" endTime="2011-05-22T21:38:39.5647177+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b1c977d9-d147-4366-9f39-77293683a2d8">
+    </UnitTestResult>
+    <UnitTestResult executionId="2f7da7f3-c4ec-4363-b6f7-d9a69de82780" testId="d5566312-6562-b3a8-7247-62759f535e6f" testName="FormCreationHtml_CompareToFile_Form2" computerName="JOERIKS-PC" duration="00:00:00.0028547" startTime="2011-05-22T21:38:39.5837188+02:00" endTime="2011-05-22T21:38:39.6027199+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2f7da7f3-c4ec-4363-b6f7-d9a69de82780">
+    </UnitTestResult>
+  </Results>
+</TestRun>
