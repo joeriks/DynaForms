@@ -1,0 +1,45 @@
+﻿@{  
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Welcome to my Web Site!";
+
+    var db = Database.Open("localdb"); 
+    
+    // Create a DynaForm with two fields
+    
+    var testForm = new DynaForms.DynaForm("person")
+        .AddFormField("Text", required:true)
+        .AddFormField("Address");            
+    
+}
+<p>
+
+    @if (IsPost)
+    {
+        // Try update the underlying form model (which is an ExpandoObject with the fields we recently added)
+        // By default it's using Request.Form values
+                
+        testForm.TryUpdateModel();
+
+        // Check validation
+        if (testForm.Validation.IsValid)
+        {
+            // Get validated result
+            dynamic result = testForm.Model;
+            
+            // Insert into DB
+            db.Execute("INSERT INTO person (name, address) VALUES (@0,@1)", result.Text, result.Address);        
+            
+            // Set Model to null to get a blank form below. If we're not nulling this the form will display
+            // the existing model values and validation messages
+            testForm.Model = null;
+        }
+    }
+    
+    @{
+        var grid = new WebGrid(db.Query("SELECT * FROM person"));
+    }    
+
+    @grid.GetHtml()        
+    @testForm.Html()
+
+</p>
