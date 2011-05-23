@@ -37,8 +37,8 @@ namespace DynaForms
         public static Dictionary<string, object> ToDictionary(this object o)
         {
             // Stolen from Rob Conery's Massive.cs
-                        
-            var result = new Dictionary<string, object>();            
+
+            var result = new Dictionary<string, object>();
             if (o.GetType() == typeof(NameValueCollection) || o.GetType().IsSubclassOf(typeof(NameValueCollection)))
             {
                 var nv = (NameValueCollection)o;
@@ -59,7 +59,7 @@ namespace DynaForms
     {
         public List<FormField> Fields { get; set; }
         public string Name { get; set; }
-        public object Model { get; set; }         
+        public object Model { get; set; }
         public bool AutoPopulateModel { get; set; }
         public bool AutoAddSubmit { get; set; }
 
@@ -183,7 +183,7 @@ namespace DynaForms
             if (this.AutoPopulateModel && this.Model.GetType() == typeof(ExpandoObject))
             {
                 if (this.Model == null) this.Model = new ExpandoObject();
-                var d = this.Model as IDictionary<string, object>;                
+                var d = this.Model as IDictionary<string, object>;
                 d.Add(f.FieldName, null);
             }
 
@@ -261,10 +261,10 @@ namespace DynaForms
                 if (this.Model != null)
                     model = this.Model;
                 else
-                    model = new ExpandoObject();                
+                    model = new ExpandoObject();
             }
 
-            var modelDictionary = (IDictionary<string, object>)model;
+            var modelDictionary = (IDictionary<string, object>)(model.ToExpando());
 
             // Is there a global error message?
             string errorMessage = "";
@@ -445,9 +445,9 @@ jQuery('#{formname}').validate({{json}});
         /// </summary>
         /// <param name="newValuesDictionary"></param>
         /// <returns></returns>
-        public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary=null, object model=null)
+        public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary = null, object model = null)
         {
-            
+
             if (newValuesDictionary == null)
                 newValuesDictionary = System.Web.HttpContext.Current.Request.Form;
 
@@ -469,7 +469,7 @@ jQuery('#{formname}').validate({{json}});
             {
                 foreach (var newValueKey in newValuesDictionary.AllKeys.ToArray<string>())
                 {
-                    if (modelDictionary.Keys.Contains(newValueKey) && (this.Fields.Count==0 || this.ContainsFieldName(newValueKey)))
+                    if (modelDictionary.Keys.Contains(newValueKey) && (this.Fields.Count == 0 || this.ContainsFieldName(newValueKey)))
                     {
                         var newValue = newValuesDictionary[newValueKey];
 
@@ -513,7 +513,7 @@ jQuery('#{formname}').validate({{json}});
                             else if (p.PropertyType == typeof(String))
                             {
                                 p.SetValue(model, newValue, null);
-                            }                            
+                            }
                             else
                             {
                                 new InvalidCastException("this type is not handled");
