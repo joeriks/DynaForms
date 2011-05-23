@@ -17,20 +17,22 @@ namespace DynaForms_Test
 
             var name = "Proj name";
             var address1 = "address";
-            var someNumber = "100";
+            var someNumber = 100;
 
             var formMock = new System.Collections.Specialized.NameValueCollection();
 
             formMock.Add("Name", name);
             formMock.Add("Address1", address1);
-            formMock.Add("SomeNumber", someNumber);
+            formMock.Add("SomeNumber", someNumber.ToString());
 
             var x = new DynaForms.DynaForm("formname");
+
             x.TryUpdateModel(formMock, project);
 
             var newProject = (Project)x.Model;
+
             Assert.AreEqual(name, newProject.Name);
-            Assert.AreEqual(100, newProject.SomeNumber);
+            Assert.AreEqual(someNumber, newProject.SomeNumber);
             Assert.AreEqual(address1, newProject.Address1);
         }
         [TestMethod]
@@ -82,6 +84,33 @@ namespace DynaForms_Test
             Assert.AreEqual(null, newProject.Address1);
 
         }
+
+        [TestMethod]
+        public void TryUpdateModel_StringsAndInteger_Ref()
+        {
+            var project = new Project();
+
+            var name = "Proj name";
+            var address1 = "address";
+            var someNumber = 100;
+
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+
+            formMock.Add("Name", name);
+            formMock.Add("Address1", address1);
+            formMock.Add("SomeNumber", someNumber.ToString());
+
+            var x = new DynaForms.DynaForm("formname");
+
+            x.TryUpdateModel(formMock, project);
+
+            var newProject = (Project)x.Model;
+
+            Assert.AreEqual(name, newProject.Name);
+            Assert.AreEqual(someNumber, newProject.SomeNumber);
+            Assert.AreEqual(address1, newProject.Address1);
+        }
+
 
     }
 }

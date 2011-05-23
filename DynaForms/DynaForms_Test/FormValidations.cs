@@ -20,7 +20,7 @@ namespace DynaForms_Test
             formMock.Add("name", "");
             f.TryUpdateModel(formMock);
 
-            Assert.AreEqual(false, f.Validation.IsValid);
+            Assert.IsFalse(f.Validation.IsValid);
 
         }
         [TestMethod]
@@ -33,7 +33,9 @@ namespace DynaForms_Test
             formMock.Add("name", "name");
             f.TryUpdateModel(formMock);
 
-            Assert.AreEqual(true, f.Validation.IsValid);
+            
+
+            Assert.IsTrue(f.Validation.IsValid);
 
         }
 

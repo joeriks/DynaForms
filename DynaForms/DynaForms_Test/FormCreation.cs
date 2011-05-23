@@ -17,8 +17,6 @@ namespace DynaForms_Test
             var x = new DynaForms.DynaForm("formname", project);
             Assert.AreEqual(x.Name,"formname");
         }
-
-
         [TestMethod]
         [DeploymentItem("resources//form1.htm")]
         public void FormCreationHtml_CompareToFile_Form1()

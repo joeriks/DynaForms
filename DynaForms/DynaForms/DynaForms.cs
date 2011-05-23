@@ -426,6 +426,20 @@ jQuery('#{formname}').validate({{json}});
 
             return jsonString;
         }
+
+        //public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary, ref dynamic model)
+        //{
+        //    TryUpdateModel(newValuesDictionary, model);
+        //    model = (dynamic)this.Model;
+        //    return validationResult;
+        //}
+        //public ValidationResult TryUpdateModel(ref dynamic model)
+        //{
+        //    TryUpdateModel(model:model);
+        //    model = (dynamic)this.Model;
+        //    return validationResult;
+        //}
+
         /// <summary>
         /// Loop through each member of the model and try set the value with a given dictionary (f ex a Request.Form)
         /// </summary>
