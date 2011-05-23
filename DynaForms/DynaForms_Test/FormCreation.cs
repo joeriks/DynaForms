@@ -25,7 +25,7 @@ namespace DynaForms_Test
             var f = new DynaForms.DynaForm("myform");
             f.AddFormField("name").AddFormField("value");
 
-            //System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\form1.htm", f.Html().ToString());
+            //System.IO.File.WriteAllText(@"C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\resources\form1.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText("form1.htm");            
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }
@@ -45,8 +45,8 @@ namespace DynaForms_Test
              .AddFormField("value",type:DynaForm.FormField.InputType.textarea)
              .AddFormField("dropdown", type:DynaForm.FormField.InputType.select, dropDownValues: dropDownValues)
              .AddFormField("submit", type:DynaForm.FormField.InputType.submit);
-            
-            //System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\form4.htm", f.Html().ToString());
+
+            //System.IO.File.WriteAllText(@"C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\resources\form4.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText("form4.htm");
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }
@@ -67,7 +67,7 @@ namespace DynaForms_Test
              .AddFormField("PrintedDateTime")
              .AddFormField("CreationDate");
 
-            //System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\form5.htm", f.Html().ToString());
+            //System.IO.File.WriteAllText(@"C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\resources\form5.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText("form5.htm");
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }

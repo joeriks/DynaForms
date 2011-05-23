@@ -13,3 +13,8 @@ C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForm
 C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
 C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
+C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll
+C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.pdb
+C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
+C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
