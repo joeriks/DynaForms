@@ -230,12 +230,9 @@ namespace DynaForms
 
                 var dictionaryValueString = "";
 
-                if (ModelDictionary.ContainsKey(x.FieldName))
+                if (ModelDictionary.ContainsKey(x.FieldName) && ModelDictionary[x.FieldName] != null)
                 {
-                    if (ModelDictionary[x.FieldName] != null)
-                    {
-                        dictionaryValueString = ModelDictionary[x.FieldName].ToString();
-                    }                    
+                    dictionaryValueString = ModelDictionary[x.FieldName].ToString();
                 }
 
                 if (x.Required && string.IsNullOrEmpty(dictionaryValueString))
