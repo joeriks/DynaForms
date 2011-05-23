@@ -1,18 +1,3 @@
-D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms\bin\Debug\DynamicForms.dll
-D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms\bin\Debug\DynamicForms.pdb
-D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms\obj\Debug\ResolveAssemblyReference.cache
-D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms\obj\Debug\DynamicForms.dll
-D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms\obj\Debug\DynamicForms.pdb
-C:\Users\jonas\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll
-C:\Users\jonas\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.pdb
-C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
-C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
-C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll
-C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.pdb
-C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
-C:\Users\joeriks\Documents\Visual Studio 2010\Projects\GitHub\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.pdb
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache

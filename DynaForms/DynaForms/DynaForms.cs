@@ -32,6 +32,61 @@ namespace DynaForms
             return result;
         }
     }
+
+    public class DynaFormTemplates
+    {
+        public const string TemplateInputText = @"
+ <div class=""labelinput"">
+  <label for=""{fieldName}"">{labelText}</label>
+  <input type=""text"" id=""{fieldName}"" name=""{fieldName}"" value=""{value}""/>{errorMessage}
+ </div>";
+        public const string TemplateTextArea = @"
+ <div class=""labeltextarea"">
+  <label for=""{fieldName}"">{labelText}</label>
+  <textarea id=""{fieldName}"" name=""{fieldName}"">{value}</textarea>{errorMessage}
+ </div>";
+        public const string TemplateCheckbox = @"
+ <div class=""labelcheckbox"">
+  <label for=""{fieldName}"">{labelText}</label>
+  <input type=""checkbox"" id=""{fieldName}"" name=""{fieldName}"" {optional} value=""{value}""/>{errorMessage}
+ </div>";
+        public const string TemplateSelect = @"
+ <div class=""labelselect"">
+  <label for=""{fieldName}"">{labelText}</label>
+  <select id=""{fieldName}"" name=""{fieldName}"">{optional}
+  </select>
+ </div>";
+        public const string TemplateSelectOption = @"
+    <option value=""{key}"">{value}</option>";
+        public const string TemplateSubmit = @"
+ <div class=""submit"">
+  <input type=""submit"" id=""{fieldName}"" name=""{fieldName}"" value=""{fieldName}""/>{errorMessage}
+ </div>";
+        public const string TemplateHidden = @"
+  <input type=""hidden"" id=""{fieldName}"" name=""{fieldName}"" value=""{value}""/>";
+        
+        public static string Replacer(string template, string key, string value, string optional)
+        {
+            var retval = template
+                .Replace("{key}", key)
+                .Replace("{value}", value)
+                .Replace("{optional}", optional);
+            return retval;
+        }
+
+        public static string Replacer(string template, string fieldName, string labelText, string value="", string optional="", string errorMessage="")
+        {
+            var retval = template
+                        .Replace("{fieldName}", fieldName)
+                        .Replace("{labelText}", labelText)
+                        .Replace("{value}", value)                        
+                        .Replace("{optional}", optional)
+                        .Replace("{errorMessage}", errorMessage);
+            return retval;
+        }
+
+    }
+
     public class DynaForm
     {
         public List<FormField> Fields { get; set; }
@@ -320,72 +375,54 @@ namespace DynaForms
                 }
                 if (h.Type == FormField.InputType.text)
                 {
-                    sb.Append(" <div class=\"labelinput\">\n");
-                    sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
-                    sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>" + errorMessage + "\n");
-                    sb.Append(" </div>\n");
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateInputText, h.FieldName, labelText, value, errorMessage); 
+                    sb.Append(html);
                 }
                 if (h.Type == FormField.InputType.textarea)
                 {
-                    sb.Append(" <div class=\"labelinput\">\n");
-                    sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
-                    sb.Append("  <textarea id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\">");
-                    sb.Append(value);
-                    sb.Append("</textarea>" + errorMessage + "\n");
-                    sb.Append(" </div>\n");
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateTextArea, h.FieldName, labelText, value, errorMessage);
+                    sb.Append(html);
                 }
                 if (h.Type == FormField.InputType.checkbox)
                 {
-                    sb.Append(" <div class=\"labelcheckbox\">\n");
-                    sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
                     var boolValue = false;
                     Boolean.TryParse(value, out boolValue);
-                    if (boolValue)
-                    {
-                        sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" checked=\"checked\" value=\"" + value + "\"/>" + errorMessage + "\n");
-                    }
-                    else
-                    {
-                        sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>" + errorMessage + "\n");
-                    }                    
-                    sb.Append(" </div>\n");
+
+                    var optional = boolValue ? "checked=\"checked\"" : "";
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateCheckbox, h.FieldName, labelText, value, optional, errorMessage);
+                    sb.Append(html);
+
                 }
 
                 if (h.Type == FormField.InputType.select)
                 {
-                    sb.Append(" <div class=\"labelselect\">\n");
-                    sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
-                    sb.Append("  <select id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\">\n");
+                    var htmlOptional=new StringBuilder();
                     foreach (var item in h.DropDownValueList)
                     {
-                        if (item.Key != value)
-                            sb.Append("  <option value=\"" + item.Key + "\">");
-                        else
-                            sb.Append("  <option value=\"" + item.Key + "\" selected=\"selected\">");
-
-                        sb.Append(item.Value.ToString());
-                        sb.Append("</option>\n");
+                        var optional ="";
+                        if (item.Key != value) optional = @"selected=""selected""";
+                        var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption,item.Key, item.Value,optional);
+                        htmlOptional.Append(htmlChild);
                     }
-                    sb.Append("  </select>\n");
-                    sb.Append(" </div>\n");
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelect, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
+                    sb.Append(html);
                 }
 
                 if (h.Type == FormField.InputType.submit)
                 {
-                    sb.Append(" <div class=\"submit\">\n");
-                    sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + labelText + "\"/>" + errorMessage + "\n");
-                    sb.Append(" </div>\n");
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit, h.FieldName, labelText, value, "", errorMessage);
+                    sb.Append(html);
                 }
                 if (h.Type == FormField.InputType.hidden)
                 {
-                    sb.Append(" <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>\n");
+                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateHidden,h.FieldName,labelText,value);
+                    sb.Append(html);
                 }
-
             }
 
             if (this.AutoAddSubmit && !(Fields.Where(f => f.Type == FormField.InputType.submit).Any()))
             {
-                sb.Append(" <input type=\"submit\" id=\"submit\" name=\"submit\"/>\n");
+                sb.Append(DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit,"submit","Submit","Submit",""));
             }
 
             sb.Append("</form>\n");
