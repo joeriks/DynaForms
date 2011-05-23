@@ -8,7 +8,6 @@ D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms_Test\ob
 D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms_Test\obj\Debug\DynamicForms_Test.dll
 D:\data\Dropbox\09_OTHER_PROJECTS\DynamicForms\DynamicForms\DynamicForms_Test\obj\Debug\DynamicForms_Test.pdb
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\resources\form1.htm
-C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\resources\form2.htm
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\DynamicForms_Test.dll
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\DynamicForms_Test.pdb
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\DynamicForms.dll
@@ -16,3 +15,5 @@ C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\DynamicForms.pdb
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\obj\Debug\DynamicForms_Test.dll
 C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\obj\Debug\DynamicForms_Test.pdb
+C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\resources\form4.htm
+C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\resources\form5.htm

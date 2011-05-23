@@ -11,32 +11,9 @@ using System.Reflection;
 namespace DynaForms
 {
     public static class ObjectExtensions
-    {
-        public static dynamic ToExpando(this object o)
-        {
-            // Stolen from Rob Conery's Massive.cs
-
-            var result = new ExpandoObject();
-            var d = result as IDictionary<string, object>; //work with the Expando as a Dictionary
-            if (o.GetType() == typeof(ExpandoObject)) return o; //shouldn't have to... but just in case
-            if (o.GetType() == typeof(NameValueCollection) || o.GetType().IsSubclassOf(typeof(NameValueCollection)))
-            {
-                var nv = (NameValueCollection)o;
-                nv.Cast<string>().Select(key => new KeyValuePair<string, object>(key, nv[key])).ToList().ForEach(i => d.Add(i));
-            }
-            else
-            {
-                var props = o.GetType().GetProperties();
-                foreach (var item in props)
-                {
-                    d.Add(item.Name, item.GetValue(o, null));
-                }
-            }
-            return result;
-        }
+    {   
         public static Dictionary<string, object> ToDictionary(this object o)
-        {
-            // Stolen from Rob Conery's Massive.cs
+        {           
 
             var result = new Dictionary<string, object>();
             if (o.GetType() == typeof(NameValueCollection) || o.GetType().IsSubclassOf(typeof(NameValueCollection)))
@@ -60,6 +37,21 @@ namespace DynaForms
         public List<FormField> Fields { get; set; }
         public string Name { get; set; }
         public object Model { get; set; }
+
+        public IDictionary<string, object> ModelDictionary
+        {
+            get {
+                if (Model.GetType() == typeof(ExpandoObject))
+                {
+                    return (IDictionary<string, object>)(Model);
+                }
+                else
+                {
+                    return Model.ToDictionary();
+                }
+            }            
+        }
+        
         public bool AutoPopulateModel { get; set; }
         public bool AutoAddSubmit { get; set; }
 
@@ -184,7 +176,23 @@ namespace DynaForms
             {
                 if (this.Model == null) this.Model = new ExpandoObject();
                 var d = this.Model as IDictionary<string, object>;
-                d.Add(f.FieldName, null);
+                if (f.Type == FormField.InputType.checkbox)
+                {
+                    d.Add(f.FieldName, false);
+                }
+                else if (min != null || max != null)
+                {
+                    d.Add(f.FieldName, 0);
+                }
+                else if (type == FormField.InputType.select && f.DropDownValueList!=null)
+                {
+                    var ddl = (Dictionary<string, string>)f.DropDownValueList;
+                    d.Add(f.FieldName, ddl.FirstOrDefault().Value);
+                }
+                else
+                {
+                    d.Add(f.FieldName, "");
+                }
             }
 
             return this;
@@ -211,37 +219,42 @@ namespace DynaForms
         {
             if (validationResult == null)
                 validationResult = new ValidationResult();
-            var modelDictionary = (IDictionary<string, object>)(model.ToExpando());
+
+            this.Model = model;
+            
 
             foreach (var x in Fields)
             {
                 // var property = model.GetType().GetProperty(x.FieldName);
                 // if (property != null) value = (property.GetValue(model, null) ?? "").ToString();
 
-                var value = "";
+                var dictionaryValueString = "";
 
-                if (modelDictionary.ContainsKey(x.FieldName))
+                if (ModelDictionary.ContainsKey(x.FieldName))
                 {
-                    value = modelDictionary[x.FieldName].ToString();
+                    if (ModelDictionary[x.FieldName] != null)
+                    {
+                        dictionaryValueString = ModelDictionary[x.FieldName].ToString();
+                    }                    
                 }
 
-                if (x.Required && string.IsNullOrEmpty(value))
+                if (x.Required && string.IsNullOrEmpty(dictionaryValueString))
                 {
-                    validationResult.AddError(x.FieldName, "Required field", x.Label());
+                    validationResult.AddError(x.FieldName, "Required field ", x.Label());
                 }
-                if (x.Email && !IsValidEmail(value))
+                if (x.Email && !IsValidEmail(dictionaryValueString))
                 {
-                    validationResult.AddError(x.FieldName, "Invalid email address", x.Label());
+                    validationResult.AddError(x.FieldName, "Invalid email address ", x.Label());
                 }
-                if (x.MinLength != 0 && value.ToString().Length < x.MinLength)
+                if (x.MinLength != 0 && dictionaryValueString.Length < x.MinLength)
                 {
                     validationResult.AddError(x.FieldName, "Mininum length is " + x.MinLength.ToString(), x.Label());
                 }
-                if (x.MaxLength != 0 && value.ToString().Length > x.MaxLength)
+                if (x.MaxLength != 0 && dictionaryValueString.Length > x.MaxLength)
                 {
                     validationResult.AddError(x.FieldName, "Maximum length is " + x.MaxLength.ToString(), x.Label());
                 }
-                if (x.RegEx != "" && !IsValidRegex(value.ToString(), x.RegEx))
+                if (x.RegEx != "" && !IsValidRegex(dictionaryValueString, x.RegEx))
                 {
                     validationResult.AddError(x.FieldName, "Invalid", x.Label());
                 }
@@ -256,15 +269,11 @@ namespace DynaForms
             var sb = new StringBuilder();
             sb.Append("<form id=\"" + Name + "\" method=\"" + method + "\" action=\"" + action + "\">\n");
 
-            if (model == null)
+            if (model != null)
             {
-                if (this.Model != null)
-                    model = this.Model;
-                else
-                    model = new ExpandoObject();
+                this.Model = model;
             }
 
-            var modelDictionary = (IDictionary<string, object>)(model.ToExpando());
 
             // Is there a global error message?
             string errorMessage = "";
@@ -287,9 +296,9 @@ namespace DynaForms
                 var labelText = h.Label();
 
                 string value = "";
-                if (model != null)
+                if (this.Model != null)
                 {
-                    foreach (var item in modelDictionary)
+                    foreach (var item in this.ModelDictionary)
                     {
                         if (item.Key == h.FieldName)
                         {
@@ -319,11 +328,29 @@ namespace DynaForms
                     sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>" + errorMessage + "\n");
                     sb.Append(" </div>\n");
                 }
+                if (h.Type == FormField.InputType.textarea)
+                {
+                    sb.Append(" <div class=\"labelinput\">\n");
+                    sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
+                    sb.Append("  <textarea id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\">");
+                    sb.Append(value);
+                    sb.Append("</textarea>" + errorMessage + "\n");
+                    sb.Append(" </div>\n");
+                }
                 if (h.Type == FormField.InputType.checkbox)
                 {
                     sb.Append(" <div class=\"labelcheckbox\">\n");
                     sb.Append("  <label for=\"" + h.FieldName + "\">" + labelText + "</label>\n");
-                    sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>" + errorMessage + "\n");
+                    var boolValue = false;
+                    Boolean.TryParse(value, out boolValue);
+                    if (boolValue)
+                    {
+                        sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" checked=\"checked\" value=\"" + value + "\"/>" + errorMessage + "\n");
+                    }
+                    else
+                    {
+                        sb.Append("  <input type=\"" + h.Type + "\" id=\"" + h.FieldName + "\" name=\"" + h.FieldName + "\" value=\"" + value + "\"/>" + errorMessage + "\n");
+                    }                    
                     sb.Append(" </div>\n");
                 }
 
@@ -451,73 +478,116 @@ jQuery('#{formname}').validate({{json}});
             if (newValuesDictionary == null)
                 newValuesDictionary = System.Web.HttpContext.Current.Request.Form;
 
-            if (model == null) model = this.Model;
+            if (model == null) model = this.Model; else this.Model = model;
+
+            if (Fields.Count() == 0)
+            {
+                foreach (var n in ModelDictionary)
+                {
+                    AddFormField(n.Key);
+                }
+            }
 
             var validationResult = new ValidationResult();
-            IDictionary<string, object> modelDictionary;
-
-            if (model.GetType() == typeof(ExpandoObject))
-            {
-                modelDictionary = (IDictionary<string, object>)model;
-            }
-            else
-            {
-                modelDictionary = model.ToDictionary();
-            }
-
+            //  newValuesDictionary.AllKeys.ToArray<string>()
             try
             {
-                foreach (var newValueKey in newValuesDictionary.AllKeys.ToArray<string>())
+                foreach (var varFields in Fields)
                 {
-                    if (modelDictionary.Keys.Contains(newValueKey) && (this.Fields.Count == 0 || this.ContainsFieldName(newValueKey)))
+                    var newValueKey = varFields.FieldName;
+                    var newValueString = "";
+                    if (newValuesDictionary.AllKeys.Contains(newValueKey))
                     {
-                        var newValue = newValuesDictionary[newValueKey];
+                        newValueString = newValuesDictionary[newValueKey];
+                    }
+
+                    if (ModelDictionary.Keys.Contains(newValueKey))
+                    {                       
+
+                        System.Type updateType;
+
+                        object newTypedValue;                        
 
                         if (model.GetType() == typeof(ExpandoObject))
                         {
-                            ((IDictionary<string, object>)model)[newValueKey] = newValue;
+                            updateType = ((IDictionary<string, object>)model)[newValueKey].GetType();
+                        }
+                        else
+                        {
+                            updateType = model.GetType().GetProperty(newValueKey).PropertyType;
+                        }
+
+                        if (updateType == typeof(Int32))
+                        {
+                            Int32 setValue = 0;
+                            Int32.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Int64))
+                        {
+                            Int64 setValue = 0;
+                            Int64.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Single))
+                        {
+                            Single setValue = 0;
+                            Single.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Double))
+                        {
+                            Double setValue = 0;
+                            Double.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Decimal))
+                        {
+                            Decimal setValue = 0;
+                            Decimal.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Boolean))
+                        {
+                            Boolean setValue = (newValueString.ToString() != "");                            
+                            newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(String))
+                        {
+                            newTypedValue = newValueString;
+                        }
+                        else if (updateType == typeof(DateTime?))
+                        {
+                            DateTime setValue;
+                            if (DateTime.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
+                        }
+                        else if (updateType == typeof(DateTime))
+                        {
+                            DateTime setValue = DateTime.MinValue;
+                            DateTime.TryParse(newValueString, out setValue);
+                            newTypedValue = setValue;
+                        }
+                        else
+                        {
+                            newTypedValue = null;
+                            new InvalidCastException("this type is not handled");
+                        }                                                
+
+                        if (model.GetType() == typeof(ExpandoObject))
+                        {
+                            ((IDictionary<string, object>)model)[newValueKey] = newTypedValue;
                         }
                         else
                         {
                             var p = model.GetType().GetProperty(newValueKey);
-                            if (p.PropertyType == typeof(Int32))
-                            {
-                                Int32 setValue = 0;
-                                Int32.TryParse(newValue, out setValue);
-                                p.SetValue(model, setValue, null);
-                            }
-                            if (p.PropertyType == typeof(Int64))
-                            {
-                                Int64 setValue = 0;
-                                Int64.TryParse(newValue, out setValue);
-                                p.SetValue(model, setValue, null);
-                            }
-                            else if (p.PropertyType == typeof(Single))
-                            {
-                                Single setValue = 0;
-                                Single.TryParse(newValue, out setValue);
-                                p.SetValue(model, setValue, null);
-                            }
-                            else if (p.PropertyType == typeof(Double))
-                            {
-                                Double setValue = 0;
-                                Double.TryParse(newValue, out setValue);
-                                p.SetValue(model, setValue, null);
-                            }
-                            else if (p.PropertyType == typeof(Decimal))
-                            {
-                                Decimal setValue = 0;
-                                Decimal.TryParse(newValue, out setValue);
-                                p.SetValue(model, setValue, null);
-                            }
-                            else if (p.PropertyType == typeof(String))
-                            {
-                                p.SetValue(model, newValue, null);
-                            }
-                            else
-                            {
-                                new InvalidCastException("this type is not handled");
-                            }
+                            p.SetValue(model, newTypedValue, null);
                         }
                     }
                 }

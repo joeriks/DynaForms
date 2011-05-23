@@ -33,8 +33,6 @@ namespace DynaForms_Test
             formMock.Add("name", "name");
             f.TryUpdateModel(formMock);
 
-            
-
             Assert.IsTrue(f.Validation.IsValid);
 
         }

@@ -56,7 +56,12 @@
     <Content Include="resources\form1.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\form2.htm">
+    <Content Include="resources\form2.htm" />
+    <Content Include="resources\form3.htm" />
+    <Content Include="resources\form4.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\form5.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -15,16 +15,16 @@ namespace DynaForms_Test
         {
             var project = new Project();
 
+            var someNumber = 100;
             var name = "Proj name";
             var address1 = "address";
-            var someNumber = 100;
-
+            
             var formMock = new System.Collections.Specialized.NameValueCollection();
 
+            formMock.Add("SomeNumber", someNumber.ToString()); 
             formMock.Add("Name", name);
             formMock.Add("Address1", address1);
-            formMock.Add("SomeNumber", someNumber.ToString());
-
+            
             var x = new DynaForms.DynaForm("formname");
 
             x.TryUpdateModel(formMock, project);
@@ -86,19 +86,13 @@ namespace DynaForms_Test
         }
 
         [TestMethod]
-        public void TryUpdateModel_StringsAndInteger_Ref()
+        public void TryUpdateModel_CheckboxTrue()
         {
             var project = new Project();
-
-            var name = "Proj name";
-            var address1 = "address";
-            var someNumber = 100;
+            var check = true;
 
             var formMock = new System.Collections.Specialized.NameValueCollection();
-
-            formMock.Add("Name", name);
-            formMock.Add("Address1", address1);
-            formMock.Add("SomeNumber", someNumber.ToString());
+            formMock.Add("Check", "on");
 
             var x = new DynaForms.DynaForm("formname");
 
@@ -106,11 +100,68 @@ namespace DynaForms_Test
 
             var newProject = (Project)x.Model;
 
-            Assert.AreEqual(name, newProject.Name);
-            Assert.AreEqual(someNumber, newProject.SomeNumber);
-            Assert.AreEqual(address1, newProject.Address1);
+            Assert.AreEqual(check, newProject.Check);
+
+        }
+        [TestMethod]
+        public void TryUpdateModel_CheckboxFalse()
+        {
+            var project = new Project();
+            var check = false;
+
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("Check", "");
+
+            var x = new DynaForms.DynaForm("formname");
+
+            x.TryUpdateModel(formMock, project);
+
+            var newProject = (Project)x.Model;
+
+            Assert.AreEqual(check, newProject.Check);
+
         }
 
+        [TestMethod]
+        public void TryUpdateModel_DateTime()
+        {
+            var project = new Project();
+
+            var date = DateTime.Now;
+
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+
+            formMock.Add("CreationDate", date.ToShortDateString());
+            formMock.Add("PrintedDateTime", date.ToString());
+
+            var x = new DynaForms.DynaForm("formname");
+
+            x.TryUpdateModel(formMock, project);
+
+            var newProject = (Project)x.Model;
+
+            Assert.AreEqual(date.ToShortDateString(), newProject.CreationDate.ToShortDateString());
+            Assert.AreEqual(date.ToString(), newProject.PrintedDateTime.ToString());
+        }
+
+        [TestMethod]
+        public void TryUpdateModel_NullableDateTime()
+        {
+            var project = new Project();
+
+            var date = DateTime.Now;
+
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("PrintedDateTime", ""); // null
+
+            var x = new DynaForms.DynaForm("formname");
+
+            x.TryUpdateModel(formMock, project);
+
+            var newProject = (Project)x.Model;
+
+            Assert.AreEqual(null, newProject.PrintedDateTime);
+        }
 
     }
 }
