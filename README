@@ -65,14 +65,14 @@ DynaForms create a jQuery Validate json-options string, which means you can add 
 @Html.Raw(personForm.ClientSideScript())
 
 
-Change html output for the controls:
+Change Html output for the controls:
 ------------------------------------
 
 1. Add a custom template when you create your forms. Use the replace keywords, {fieldName}, {value} and {errorMessage}
 
   var customTemplate = "<input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}\n";
 
-  var f = new DynaForms.DynaForm("formname", project);
+  var f = new DynaForms.DynaForm("formname");
   f.AddFormField("Name", template: customTemplate);
   f.AddFormField("Address", template: customTemplate);
 
@@ -83,6 +83,15 @@ public const string TemplateInputText = @"
   <input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}
  </div>";
 
+Add plain Html to the forms
+--------------------------- 
+You can add plain Html with AddHtml():
+  var f = new DynaForms.DynaForm("formname");
+    .AddHtml("<fieldset>\n");
+    .AddHtml("  <legend>Fieldset 1</legend>\n"); 
+    .AddFormField("Name");
+    .AddFormField("Address");
+    .AddHtml("</fieldset>\n"); 
  
 More information:
 -----------------
