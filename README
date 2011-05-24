@@ -43,6 +43,17 @@ DynaForms create a jQuery Validate json-options string, which means you can add 
 @Html.Raw(personForm.ClientSideScript())
 
 
+Change html output for the controls:
+------------------------------------
+
+Change the html for the "field controls" by editing the templates in Dynaforms.cs:
+public const string TemplateInputText = @"
+ <div class='labelinput'>
+  <label for='{fieldName}'>{labelText}</label>
+  <input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}
+ </div>";
+
+ 
 More information:
 -----------------
-Have a look in the tests, and at the example
+There are tests and a sample to look at.
