@@ -11,9 +11,9 @@ using System.Reflection;
 namespace DynaForms
 {
     public static class ObjectExtensions
-    {   
+    {
         public static Dictionary<string, object> ToDictionary(this object o)
-        {           
+        {
 
             var result = new Dictionary<string, object>();
             if (o.GetType() == typeof(NameValueCollection) || o.GetType().IsSubclassOf(typeof(NameValueCollection)))
@@ -21,6 +21,17 @@ namespace DynaForms
                 var nv = (NameValueCollection)o;
                 nv.Cast<string>().Select(key => new KeyValuePair<string, object>(key, nv[key])).ToList().ForEach(i => result.Add(i.Key, i));
             }
+
+            //// remove this else if block if you're not using WebMatrix Data
+            //else if (o.GetType() == typeof(WebMatrix.Data.DynamicRecord))
+            //{
+            //    var dr = o as WebMatrix.Data.DynamicRecord;
+            //    foreach (var c in dr.Columns)
+            //    {
+            //        result.Add(c, dr[c]);
+            //    }
+            //}
+
             else
             {
                 var props = o.GetType().GetProperties();
@@ -80,12 +91,12 @@ namespace DynaForms
             return retval;
         }
 
-        public static string Replacer(string template, string fieldName, string labelText, string value="", string optional="", string errorMessage="")
+        public static string Replacer(string template, string fieldName, string labelText, string value = "", string optional = "", string errorMessage = "")
         {
             var retval = template
                         .Replace("{fieldName}", fieldName)
                         .Replace("{labelText}", labelText)
-                        .Replace("{value}", value)                        
+                        .Replace("{value}", value)
                         .Replace("{optional}", optional)
                         .Replace("{errorMessage}", errorMessage);
             return retval;
@@ -101,7 +112,8 @@ namespace DynaForms
 
         public IDictionary<string, object> ModelDictionary
         {
-            get {
+            get
+            {
                 if (Model.GetType() == typeof(ExpandoObject))
                 {
                     return (IDictionary<string, object>)(Model);
@@ -110,9 +122,9 @@ namespace DynaForms
                 {
                     return Model.ToDictionary();
                 }
-            }            
+            }
         }
-        
+
         public bool AutoPopulateModel { get; set; }
         public bool AutoAddSubmit { get; set; }
 
@@ -166,6 +178,21 @@ namespace DynaForms
             Name = name;
             if (model != null)
             {
+
+                if (model.GetType() == typeof(WebMatrix.Data.DynamicRecord))
+                {
+                    // convert to expando
+                    var expandoModel = new ExpandoObject();
+                    var dictionary = expandoModel as IDictionary<string, object>;
+
+                    var dr = model as WebMatrix.Data.DynamicRecord;
+                    foreach (var c in dr.Columns)
+                    {
+                        dictionary.Add(c, dr[c]);
+                    }
+                    model = expandoModel;
+                }
+
                 Model = model;
                 AutoPopulateModel = false;
             }
@@ -175,7 +202,7 @@ namespace DynaForms
                 AutoPopulateModel = true;
             }
             AutoAddSubmit = autoAddSubmit;
-            
+
             Fields = new List<FormField>();
         }
         public class ValidationResult
@@ -259,7 +286,7 @@ namespace DynaForms
                 {
                     d.Add(f.FieldName, 0);
                 }
-                else if (type == FormField.InputType.select && f.DropDownValueList!=null)
+                else if (type == FormField.InputType.select && f.DropDownValueList != null)
                 {
                     var ddl = (Dictionary<string, string>)f.DropDownValueList;
                     d.Add(f.FieldName, ddl.FirstOrDefault().Value);
@@ -296,7 +323,7 @@ namespace DynaForms
                 validationResult = new ValidationResult();
 
             this.Model = model;
-            
+
 
             foreach (var x in Fields)
             {
@@ -345,6 +372,21 @@ namespace DynaForms
                 this.Model = model;
             }
 
+            if (Fields.Count() == 0)
+            {
+                autoPopulateFormFields();
+            }
+
+            //if (model == null)
+            //{
+            //    var createExpando = new ExpandoObject();
+            //    var expandoDictionary = createExpando as IDictionary<string, object>;
+            //    foreach (var f in Fields)
+            //    {
+            //        expandoDictionary.Add(f.FieldName, "");
+            //    }
+            //    this.Model = createExpando;                
+            //}
 
             // Is there a global error message?
             string errorMessage = "";
@@ -378,17 +420,9 @@ namespace DynaForms
                     var labelText = h.Label();
 
                     string value = "";
-                    if (this.Model != null)
+                    if (this.Model != null && this.ModelDictionary.ContainsKey(h.FieldName) && this.ModelDictionary[h.FieldName] != null)
                     {
-                        foreach (var item in this.ModelDictionary)
-                        {
-                            if (item.Key == h.FieldName)
-                            {
-                                object v = item.Value;
-                                if (v != null)
-                                    value = v.ToString();
-                            }
-                        }
+                        value = this.ModelDictionary[h.FieldName].ToString();
                     }
 
                     errorMessage = "";
@@ -405,15 +439,15 @@ namespace DynaForms
                     }
                     if (h.Type == FormField.InputType.text)
                     {
-                        var template = (h.Template!="")?h.Template:DynaFormTemplates.TemplateInputText;
-                        
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, errorMessage);
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateInputText;
+
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value, errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.textarea)
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateTextArea;
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, errorMessage);
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value, errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.checkbox)
@@ -424,7 +458,7 @@ namespace DynaForms
                         Boolean.TryParse(value, out boolValue);
 
                         var optional = boolValue ? "checked='checked'" : "";
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, optional, errorMessage);
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value, optional, errorMessage);
                         sb.Append(html);
 
                     }
@@ -440,7 +474,7 @@ namespace DynaForms
                             var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption, item.Key, item.Value, optional);
                             htmlOptional.Append(htmlChild);
                         }
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
                         sb.Append(html);
                     }
 
@@ -448,14 +482,14 @@ namespace DynaForms
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSubmit;
 
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, "", errorMessage);
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value, "", errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.hidden)
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateHidden;
 
-                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value);
+                        var html = DynaFormTemplates.Replacer(template, h.FieldName, labelText, value);
                         sb.Append(html);
                     }
                 }
@@ -463,10 +497,10 @@ namespace DynaForms
 
             if (this.AutoAddSubmit && !(Fields.Where(f => f.Type == FormField.InputType.submit).Any()))
             {
-                sb.Append(DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit,"submit","Submit","Submit",""));
+                sb.Append(DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit, "submit", "Submit", "Submit", ""));
             }
 
-            if (!omitFormTag) 
+            if (!omitFormTag)
                 sb.Append("</form>\n");
             return new HtmlString(sb.ToString());
         }
@@ -530,6 +564,14 @@ jQuery('#{formname}').validate({{json}});
             return jsonString;
         }
 
+        private void autoPopulateFormFields()
+        {
+            foreach (var n in ModelDictionary)
+            {
+                AddFormField(n.Key);
+            }
+        }
+
         public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary = null, object model = null)
         {
 
@@ -540,16 +582,13 @@ jQuery('#{formname}').validate({{json}});
 
             if (Fields.Count() == 0)
             {
-                foreach (var n in ModelDictionary)
-                {
-                    AddFormField(n.Key);
-                }
+                autoPopulateFormFields();
             }
 
             var validationResult = new ValidationResult();
 
-            try
-            {
+            //try
+            //{
                 foreach (var varFields in Fields)
                 {
                     var newValueKey = varFields.FieldName;
@@ -560,15 +599,18 @@ jQuery('#{formname}').validate({{json}});
                     }
 
                     if (ModelDictionary.Keys.Contains(newValueKey))
-                    {                       
+                    {
 
                         System.Type updateType;
 
-                        object newTypedValue;                        
+                        object newTypedValue;
 
                         if (model.GetType() == typeof(ExpandoObject))
                         {
-                            updateType = ((IDictionary<string, object>)model)[newValueKey].GetType();
+                            if (ModelDictionary[newValueKey] != null)
+                                updateType = ModelDictionary[newValueKey].GetType();
+                            else
+                                updateType = typeof(String);
                         }
                         else
                         {
@@ -607,7 +649,7 @@ jQuery('#{formname}').validate({{json}});
                         }
                         else if (updateType == typeof(Boolean))
                         {
-                            Boolean setValue = (newValueString.ToString() != "");                            
+                            Boolean setValue = (newValueString.ToString() != "");
                             newTypedValue = setValue;
                         }
                         else if (updateType == typeof(String))
@@ -636,7 +678,7 @@ jQuery('#{formname}').validate({{json}});
                         {
                             newTypedValue = null;
                             new InvalidCastException("this type is not handled");
-                        }                                                
+                        }
 
                         if (model.GetType() == typeof(ExpandoObject))
                         {
@@ -650,12 +692,12 @@ jQuery('#{formname}').validate({{json}});
                     }
                 }
                 this.Model = model;
-            }
-            catch (Exception ex)
-            {
-                validationResult.AddError("", System.Web.HttpUtility.HtmlEncode(ex.Message), "");
-                validationResult.IsValid = false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    validationResult.AddError("", System.Web.HttpUtility.HtmlEncode(ex.Message), "");
+            //    validationResult.IsValid = false;
+            //}
             this.validationResult = validationResult;
 
             if (!validationResult.IsValid)
