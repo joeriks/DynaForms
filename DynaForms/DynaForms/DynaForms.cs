@@ -155,6 +155,7 @@ namespace DynaForms
             public int? Max { get; set; }
             public string Html { get; set; }
             public string Template { get; set; }
+            public object DefaultValue { get; set; }
 
             public Dictionary<string, string> DropDownValueList { get; set; }
 
@@ -257,7 +258,7 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "")
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null)
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -271,8 +272,7 @@ namespace DynaForms
             f.Min = min;
             f.Max = max;
             f.Template = template;
-            f.DropDownValueList = dropDownValues;
-            Fields.Add(f);
+            f.DropDownValueList = dropDownValues;            
 
             if (this.AutoPopulateModel && this.Model.GetType() == typeof(ExpandoObject))
             {
@@ -280,22 +280,26 @@ namespace DynaForms
                 var d = this.Model as IDictionary<string, object>;
                 if (f.Type == FormField.InputType.checkbox)
                 {
-                    d.Add(f.FieldName, false);
+                    defaultValue = defaultValue ?? false;                    
                 }
                 else if (min != null || max != null)
                 {
-                    d.Add(f.FieldName, 0);
+                    defaultValue = defaultValue ?? 0;                    
                 }
                 else if (type == FormField.InputType.select && f.DropDownValueList != null)
                 {
                     var ddl = (Dictionary<string, string>)f.DropDownValueList;
-                    d.Add(f.FieldName, ddl.FirstOrDefault().Value);
+                    defaultValue = ddl.FirstOrDefault().Value;                    
                 }
                 else
                 {
-                    d.Add(f.FieldName, "");
+                    defaultValue = defaultValue ?? "";                    
                 }
+                d.Add(f.FieldName, defaultValue);
             }
+
+            f.DefaultValue = defaultValue;            
+            Fields.Add(f);
 
             return this;
         }
@@ -316,14 +320,22 @@ namespace DynaForms
             get { return validationResult; }
             set { validationResult = value; }
         }
-
+        public void ClearModel()
+        {
+            foreach (var f in Fields)
+            {
+                if (ModelDictionary.ContainsKey(f.FieldName))
+                {
+                    ModelDictionary[f.FieldName] = f.DefaultValue;
+                }
+            }
+        }
         public ValidationResult Validate(object model, ValidationResult validationResult = null)
         {
             if (validationResult == null)
                 validationResult = new ValidationResult();
 
             this.Model = model;
-
 
             foreach (var x in Fields)
             {
@@ -587,8 +599,8 @@ jQuery('#{formname}').validate({{json}});
 
             var validationResult = new ValidationResult();
 
-            //try
-            //{
+            try
+            {
                 foreach (var varFields in Fields)
                 {
                     var newValueKey = varFields.FieldName;
@@ -692,12 +704,12 @@ jQuery('#{formname}').validate({{json}});
                     }
                 }
                 this.Model = model;
-            //}
-            //catch (Exception ex)
-            //{
-            //    validationResult.AddError("", System.Web.HttpUtility.HtmlEncode(ex.Message), "");
-            //    validationResult.IsValid = false;
-            //}
+            }
+            catch (Exception ex)
+            {
+                validationResult.AddError("", System.Web.HttpUtility.HtmlEncode(ex.Message), "");
+                validationResult.IsValid = false;
+            }
             this.validationResult = validationResult;
 
             if (!validationResult.IsValid)
