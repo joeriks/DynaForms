@@ -111,6 +111,7 @@ namespace DynaForms
         public bool AutoAddSubmit { get; set; }
 
 
+
         public class FormField
         {
             public enum InputType
@@ -168,7 +169,7 @@ namespace DynaForms
                 AutoPopulateModel = true;
             }
             AutoAddSubmit = autoAddSubmit;
-            //Model = model.ToExpando();
+            
             Fields = new List<FormField>();
         }
         public class ValidationResult
@@ -326,11 +327,12 @@ namespace DynaForms
             this.validationResult = validationResult;
             return validationResult;
         }
-        public HtmlString Html(object model = null, string action = "#", string method = "post")
+        public HtmlString Html(object model = null, string action = "#", string method = "post", bool omitFormTag = false)
         {
 
             var sb = new StringBuilder();
-            sb.Append("<form id='" + Name + "' method='" + method + "' action='" + action + "'>\n");
+            if (!omitFormTag)
+                sb.Append("<form id='" + Name + "' method='" + method + "' action='" + action + "'>\n");
 
             if (model != null)
             {
@@ -458,7 +460,8 @@ namespace DynaForms
                 sb.Append(DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit,"submit","Submit","Submit",""));
             }
 
-            sb.Append("</form>\n");
+            if (!omitFormTag) 
+                sb.Append("</form>\n");
             return new HtmlString(sb.ToString());
         }
         public string ClientSideScript()
