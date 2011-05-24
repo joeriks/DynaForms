@@ -135,6 +135,7 @@ namespace DynaForms
             public int? Min { get; set; }
             public int? Max { get; set; }
             public string Html { get; set; }
+            public string Template { get; set; }
 
             public Dictionary<string, string> DropDownValueList { get; set; }
 
@@ -222,7 +223,7 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null)
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "")
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -235,6 +236,7 @@ namespace DynaForms
             f.RegEx = regEx;
             f.Min = min;
             f.Max = max;
+            f.Template = template;
             f.DropDownValueList = dropDownValues;
             Fields.Add(f);
 
@@ -395,27 +397,34 @@ namespace DynaForms
                     }
                     if (h.Type == FormField.InputType.text)
                     {
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateInputText, h.FieldName, labelText, value, errorMessage);
+                        var template = (h.Template!="")?h.Template:DynaFormTemplates.TemplateInputText;
+                        
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.textarea)
                     {
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateTextArea, h.FieldName, labelText, value, errorMessage);
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateTextArea;
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.checkbox)
                     {
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateCheckbox;
+
                         var boolValue = false;
                         Boolean.TryParse(value, out boolValue);
 
                         var optional = boolValue ? "checked='checked'" : "";
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateCheckbox, h.FieldName, labelText, value, optional, errorMessage);
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, optional, errorMessage);
                         sb.Append(html);
 
                     }
 
                     if (h.Type == FormField.InputType.select)
                     {
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSelect;
+
                         var htmlOptional = new StringBuilder();
                         foreach (var item in h.DropDownValueList)
                         {
@@ -423,18 +432,22 @@ namespace DynaForms
                             var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption, item.Key, item.Value, optional);
                             htmlOptional.Append(htmlChild);
                         }
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelect, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
                         sb.Append(html);
                     }
 
                     if (h.Type == FormField.InputType.submit)
                     {
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit, h.FieldName, labelText, value, "", errorMessage);
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSubmit;
+
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value, "", errorMessage);
                         sb.Append(html);
                     }
                     if (h.Type == FormField.InputType.hidden)
                     {
-                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateHidden, h.FieldName, labelText, value);
+                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateHidden;
+
+                        var html = DynaFormTemplates.Replacer(h.Template, h.FieldName, labelText, value);
                         sb.Append(html);
                     }
                 }

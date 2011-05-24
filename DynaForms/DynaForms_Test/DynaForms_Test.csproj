@@ -53,6 +53,9 @@
     <Compile Include="TryUpdateModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\CustomTemplate.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\form1.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

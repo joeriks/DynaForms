@@ -19,6 +19,23 @@ namespace DynaForms_Test
         }
 
         [TestMethod]
+        [DeploymentItem("resources//CustomTemplate.htm")]        
+        public void FormCreation_CustomTemplate()
+        {
+            var project = new Project();
+
+            var customTemplate = "<input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}\n";
+
+            var f = new DynaForms.DynaForm("formname", project);
+            f.AddFormField("Name", template: customTemplate);
+            f.AddFormField("Address", template: customTemplate);
+
+            System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\CustomTemplate.htm", f.Html().ToString());
+            var expectedResult = System.IO.File.ReadAllText("CustomTemplate.htm");
+            Assert.AreEqual(expectedResult, f.Html().ToString());
+        }
+        
+        [TestMethod]
         [DeploymentItem("resources//WithHtml.htm")]
         public void FormCreation_WithHtml()
         {
