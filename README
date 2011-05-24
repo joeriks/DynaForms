@@ -3,41 +3,46 @@ With the help of the one-file DynaForms.cs you can create and handle Html forms 
 Basic add new form:
 -------------------
 
-    var personForm = new DynaForms.DynaForm("person")
-        .AddFormField("Name", required: true)        
-        .AddFormField("Address")
-        .AddFormField("Active", type: DynaForm.FormField.InputType.checkbox);
+  var personForm = new DynaForms.DynaForm("person")
+    .AddFormField("Name", required: true)        
+    .AddFormField("Address")
+    .AddFormField("Active", type: DynaForm.FormField.InputType.checkbox);
 
 
 Display form html:		
 ------------------
 		
-    @personForm.Html()		
+  @personForm.Html()		
 
 Handle post:
 ------------
 
-	if (IsPost)
-	{
-		if (personForm.TryUpdateModel().IsValid)
-		{
-			// Form is valid - insert into DB. Get the model from the dynaform, by default it's an ExpandoObject:
-			dynamic result = personForm.Model;
-			db.Execute("INSERT INTO person (Name, Address, Active) VALUES (@0,@1,@2)", result.Name, result.Address, result.Active);
-		}
-		else
-		{
-			// Form is not valid - show form again with validation error messages:
-			@personForm.Html()
-		}
-	}
+  if (IsPost)
+  {
+    if (personForm.TryUpdateModel().IsValid)
+    {
+      // Form is valid - insert into DB. Get the model from the dynaform, by default it's an ExpandoObject:
+      dynamic result = personForm.Model;
+      db.Execute("INSERT INTO person (Name, Address, Active) VALUES (@0,@1,@2)", result.Name, result.Address, result.Active);
+    }
+    else
+    {
+      // Form is not valid - show form again with validation error messages:
+      @personForm.Html()
+    }
+  }
 	
 Use client side validation:
 ---------------------------
 
-DynaForms create a jQuery Validate JSon-options string, which means you can add client side validation just by including these lines:
+DynaForms create a jQuery Validate json-options string, which means you can add client side validation just by including these lines:
 
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.2.min.js"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8/jquery.validate.min.js"></script>
+<script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.2.min.js'></script>
+<script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8/jquery.validate.min.js'></script>
 
 @Html.Raw(personForm.ClientSideScript())
+
+
+More information:
+-----------------
+Have a look in the tests, and at the example
