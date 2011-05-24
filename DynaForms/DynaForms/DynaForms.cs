@@ -64,7 +64,13 @@ namespace DynaForms
  </div>";
         public const string TemplateHidden = @"
   <input type='hidden' id='{fieldName}' name='{fieldName}' value='{value}'/>";
-        
+
+        public const string MessageRequiredField = "Required field ";
+        public const string MessageInvalidEmailAddress = "Invalid email address ";
+        public const string MessageMinimumLengthIs = "Minimum length is ";
+        public const string MessageMaximumLengthIs = "Maximum length is ";
+        public const string MessageInvalid = "Invalid ";
+
         public static string Replacer(string template, string key, string value, string optional)
         {
             var retval = template
@@ -304,23 +310,23 @@ namespace DynaForms
 
                 if (x.Required && string.IsNullOrEmpty(dictionaryValueString))
                 {
-                    validationResult.AddError(x.FieldName, "Required field ", x.Label());
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageRequiredField, x.Label());
                 }
                 if (x.Email && !IsValidEmail(dictionaryValueString))
                 {
-                    validationResult.AddError(x.FieldName, "Invalid email address ", x.Label());
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageInvalidEmailAddress, x.Label());
                 }
                 if (x.MinLength != 0 && dictionaryValueString.Length < x.MinLength)
                 {
-                    validationResult.AddError(x.FieldName, "Mininum length is " + x.MinLength.ToString(), x.Label());
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageMinimumLengthIs + x.MinLength.ToString(), x.Label());
                 }
                 if (x.MaxLength != 0 && dictionaryValueString.Length > x.MaxLength)
                 {
-                    validationResult.AddError(x.FieldName, "Maximum length is " + x.MaxLength.ToString(), x.Label());
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageMaximumLengthIs + x.MaxLength.ToString(), x.Label());
                 }
                 if (x.RegEx != "" && !IsValidRegex(dictionaryValueString, x.RegEx))
                 {
-                    validationResult.AddError(x.FieldName, "Invalid", x.Label());
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageInvalid, x.Label());
                 }
             }
             validationResult.IsValid = (validationResult.Errors.Count == 0);
