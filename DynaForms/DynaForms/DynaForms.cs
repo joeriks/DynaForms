@@ -36,34 +36,34 @@ namespace DynaForms
     public class DynaFormTemplates
     {
         public const string TemplateInputText = @"
- <div class=""labelinput"">
-  <label for=""{fieldName}"">{labelText}</label>
-  <input type=""text"" id=""{fieldName}"" name=""{fieldName}"" value=""{value}""/>{errorMessage}
+ <div class='labelinput'>
+  <label for='{fieldName}'>{labelText}</label>
+  <input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}
  </div>";
         public const string TemplateTextArea = @"
- <div class=""labeltextarea"">
-  <label for=""{fieldName}"">{labelText}</label>
-  <textarea id=""{fieldName}"" name=""{fieldName}"">{value}</textarea>{errorMessage}
+ <div class='labeltextarea'>
+  <label for='{fieldName}'>{labelText}</label>
+  <textarea id='{fieldName}' name='{fieldName}'>{value}</textarea>{errorMessage}
  </div>";
         public const string TemplateCheckbox = @"
- <div class=""labelcheckbox"">
-  <label for=""{fieldName}"">{labelText}</label>
-  <input type=""checkbox"" id=""{fieldName}"" name=""{fieldName}"" {optional} value=""{value}""/>{errorMessage}
+ <div class='labelcheckbox'>
+  <label for='{fieldName}'>{labelText}</label>
+  <input type='checkbox' id='{fieldName}' name='{fieldName}' {optional} value='{value}'/>{errorMessage}
  </div>";
         public const string TemplateSelect = @"
- <div class=""labelselect"">
-  <label for=""{fieldName}"">{labelText}</label>
-  <select id=""{fieldName}"" name=""{fieldName}"">{optional}
+ <div class='labelselect'>
+  <label for='{fieldName}'>{labelText}</label>
+  <select id='{fieldName}' name='{fieldName}'>{optional}
   </select>
  </div>";
         public const string TemplateSelectOption = @"
-    <option value=""{key}"">{value}</option>";
+    <option value='{key}'>{value}</option>";
         public const string TemplateSubmit = @"
- <div class=""submit"">
-  <input type=""submit"" id=""{fieldName}"" name=""{fieldName}"" value=""{fieldName}""/>{errorMessage}
+ <div class='submit'>
+  <input type='submit' id='{fieldName}' name='{fieldName}' value='{fieldName}'/>{errorMessage}
  </div>";
         public const string TemplateHidden = @"
-  <input type=""hidden"" id=""{fieldName}"" name=""{fieldName}"" value=""{value}""/>";
+  <input type='hidden' id='{fieldName}' name='{fieldName}' value='{value}'/>";
         
         public static string Replacer(string template, string key, string value, string optional)
         {
@@ -280,8 +280,6 @@ namespace DynaForms
 
             foreach (var x in Fields)
             {
-                // var property = model.GetType().GetProperty(x.FieldName);
-                // if (property != null) value = (property.GetValue(model, null) ?? "").ToString();
 
                 var dictionaryValueString = "";
 
@@ -319,7 +317,7 @@ namespace DynaForms
         {
 
             var sb = new StringBuilder();
-            sb.Append("<form id=\"" + Name + "\" method=\"" + method + "\" action=\"" + action + "\">\n");
+            sb.Append("<form id='" + Name + "' method='" + method + "' action='" + action + "'>\n");
 
             if (model != null)
             {
@@ -342,7 +340,10 @@ namespace DynaForms
             }
             if (errorMessage != "") sb.Append("<div>" + errorMessage + "</div>");
 
+            //
             // Create the Html tags for the form
+            //
+
             foreach (var h in Fields)
             {
                 var labelText = h.Label();
@@ -374,7 +375,7 @@ namespace DynaForms
                     }
                 }
                 if (h.Type == FormField.InputType.text)
-                {
+                {   
                     var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateInputText, h.FieldName, labelText, value, errorMessage); 
                     sb.Append(html);
                 }
@@ -388,7 +389,7 @@ namespace DynaForms
                     var boolValue = false;
                     Boolean.TryParse(value, out boolValue);
 
-                    var optional = boolValue ? "checked=\"checked\"" : "";
+                    var optional = boolValue ? "checked='checked'" : "";
                     var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateCheckbox, h.FieldName, labelText, value, optional, errorMessage);
                     sb.Append(html);
 
@@ -399,8 +400,7 @@ namespace DynaForms
                     var htmlOptional=new StringBuilder();
                     foreach (var item in h.DropDownValueList)
                     {
-                        var optional ="";
-                        if (item.Key != value) optional = @"selected=""selected""";
+                        var optional = (item.Key != value)? "selected='selected'" : "";                        
                         var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption,item.Key, item.Value,optional);
                         htmlOptional.Append(htmlChild);
                     }
@@ -430,7 +430,7 @@ namespace DynaForms
         }
         public string ClientSideScript()
         {
-            var script = @"<script type=""text/javascript"">
+            var script = @"<script type='text/javascript'>
 jQuery(document).ready(function() { 
 jQuery('#{formname}').validate({{json}});
 });
@@ -488,24 +488,6 @@ jQuery('#{formname}').validate({{json}});
             return jsonString;
         }
 
-        //public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary, ref dynamic model)
-        //{
-        //    TryUpdateModel(newValuesDictionary, model);
-        //    model = (dynamic)this.Model;
-        //    return validationResult;
-        //}
-        //public ValidationResult TryUpdateModel(ref dynamic model)
-        //{
-        //    TryUpdateModel(model:model);
-        //    model = (dynamic)this.Model;
-        //    return validationResult;
-        //}
-
-        /// <summary>
-        /// Loop through each member of the model and try set the value with a given dictionary (f ex a Request.Form)
-        /// </summary>
-        /// <param name="newValuesDictionary"></param>
-        /// <returns></returns>
         public ValidationResult TryUpdateModel(NameValueCollection newValuesDictionary = null, object model = null)
         {
 
@@ -523,7 +505,7 @@ jQuery('#{formname}').validate({{json}});
             }
 
             var validationResult = new ValidationResult();
-            //  newValuesDictionary.AllKeys.ToArray<string>()
+
             try
             {
                 foreach (var varFields in Fields)

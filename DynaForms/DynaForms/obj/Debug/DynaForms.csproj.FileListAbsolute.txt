@@ -3,3 +3,9 @@ C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\bin\Debug\
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.dll
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\bin\Debug\DynamicForms.pdb
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.dll
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.pdb
+C:\Users\jonas\DynaForms\DynaForms\DynaForms\obj\Debug\DynamicForms.g.resources
