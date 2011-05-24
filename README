@@ -68,6 +68,8 @@ DynaForms create a jQuery Validate json-options string, which means you can add 
 Change Html output for the controls:
 ------------------------------------
 
+Either:
+
 1. Add a custom template when you create your forms. Use the replace keywords, {fieldName}, {value} and {errorMessage}
 
   var customTemplate = "<input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}\n";
@@ -76,7 +78,7 @@ Change Html output for the controls:
   f.AddFormField("Name", template: customTemplate);
   f.AddFormField("Address", template: customTemplate);
 
-2. Or change the default html templates for the "field controls" by editing the templates in Dynaforms.cs:
+2. Or change the default html templates for the "field controls" by editing the templates in DynaFormTemplates.cs:
 public const string TemplateInputText = @"
  <div class='labelinput'>
   <label for='{fieldName}'>{labelText}</label>
