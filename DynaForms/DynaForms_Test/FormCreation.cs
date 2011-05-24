@@ -19,6 +19,35 @@ namespace DynaForms_Test
         }
 
         [TestMethod]
+        [DeploymentItem("resources//WithHtml.htm")]
+        public void FormCreation_WithHtml()
+        {
+            var project = new Project();
+            var f = new DynaForms.DynaForm("formname", project);
+
+            f.AddHtml("<fieldset>\n");
+            f.AddHtml("  <legend>Fieldset 1</legend>\n"); 
+            f.AddFormField("Name");
+            f.AddFormField("Address");
+            f.AddHtml("</fieldset>\n");
+
+            f.AddHtml("<fieldset>\n");
+            f.AddHtml("  <legend>Fieldset 2</legend>\n"); 
+            f.AddFormField("Phone 1");
+            f.AddFormField("Phone 2");
+            f.AddHtml("</fieldset>\n");
+
+            f.AddHtml("<fieldset>\n");
+            f.AddFormField("Submit", type: DynaForm.FormField.InputType.submit);
+            f.AddHtml("</fieldset>\n");
+
+            System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\WithHtml.htm", f.Html().ToString());
+            var expectedResult = System.IO.File.ReadAllText("WithHtml.htm");
+            Assert.AreEqual(expectedResult, f.Html().ToString());
+
+        }
+        
+        [TestMethod]
         [DeploymentItem("resources//form1.htm")]
         public void FormCreationHtml_CompareToFile_Form1()
         {

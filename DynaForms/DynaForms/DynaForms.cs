@@ -115,6 +115,7 @@ namespace DynaForms
         {
             public enum InputType
             {
+                html,
                 text,
                 select,
                 textarea,
@@ -133,6 +134,7 @@ namespace DynaForms
             public string RegEx { get; set; }
             public int? Min { get; set; }
             public int? Max { get; set; }
+            public string Html { get; set; }
 
             public Dictionary<string, string> DropDownValueList { get; set; }
 
@@ -210,6 +212,15 @@ namespace DynaForms
                 }
             }
             return false;
+        }
+        public DynaForms.DynaForm AddHtml(string html)
+        {
+            var f = new FormField();
+            f.Html = html;
+            f.Type = FormField.InputType.html;
+            Fields.Add(f);
+
+            return this;
         }
         public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null)
         {
@@ -346,77 +357,86 @@ namespace DynaForms
 
             foreach (var h in Fields)
             {
-                var labelText = h.Label();
 
-                string value = "";
-                if (this.Model != null)
+                if (h.Type == FormField.InputType.html)
                 {
-                    foreach (var item in this.ModelDictionary)
+                    sb.Append(h.Html);
+                }
+                else
+                {
+
+                    var labelText = h.Label();
+
+                    string value = "";
+                    if (this.Model != null)
                     {
-                        if (item.Key == h.FieldName)
+                        foreach (var item in this.ModelDictionary)
                         {
-                            object v = item.Value;
-                            if (v != null)
-                                value = v.ToString();
+                            if (item.Key == h.FieldName)
+                            {
+                                object v = item.Value;
+                                if (v != null)
+                                    value = v.ToString();
+                            }
                         }
                     }
-                }
 
-                errorMessage = "";
-                if (validationResult != null && !validationResult.IsValid)
-                {
-                    foreach (var e in validationResult.Errors)
+                    errorMessage = "";
+                    if (validationResult != null && !validationResult.IsValid)
                     {
-                        if (e.Field == h.FieldName)
+                        foreach (var e in validationResult.Errors)
                         {
-                            if (errorMessage != "") errorMessage += ", ";
-                            errorMessage += e.Error;
+                            if (e.Field == h.FieldName)
+                            {
+                                if (errorMessage != "") errorMessage += ", ";
+                                errorMessage += e.Error;
+                            }
                         }
                     }
-                }
-                if (h.Type == FormField.InputType.text)
-                {   
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateInputText, h.FieldName, labelText, value, errorMessage); 
-                    sb.Append(html);
-                }
-                if (h.Type == FormField.InputType.textarea)
-                {
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateTextArea, h.FieldName, labelText, value, errorMessage);
-                    sb.Append(html);
-                }
-                if (h.Type == FormField.InputType.checkbox)
-                {
-                    var boolValue = false;
-                    Boolean.TryParse(value, out boolValue);
-
-                    var optional = boolValue ? "checked='checked'" : "";
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateCheckbox, h.FieldName, labelText, value, optional, errorMessage);
-                    sb.Append(html);
-
-                }
-
-                if (h.Type == FormField.InputType.select)
-                {
-                    var htmlOptional=new StringBuilder();
-                    foreach (var item in h.DropDownValueList)
+                    if (h.Type == FormField.InputType.text)
                     {
-                        var optional = (item.Key != value)? "selected='selected'" : "";                        
-                        var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption,item.Key, item.Value,optional);
-                        htmlOptional.Append(htmlChild);
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateInputText, h.FieldName, labelText, value, errorMessage);
+                        sb.Append(html);
                     }
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelect, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
-                    sb.Append(html);
-                }
+                    if (h.Type == FormField.InputType.textarea)
+                    {
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateTextArea, h.FieldName, labelText, value, errorMessage);
+                        sb.Append(html);
+                    }
+                    if (h.Type == FormField.InputType.checkbox)
+                    {
+                        var boolValue = false;
+                        Boolean.TryParse(value, out boolValue);
 
-                if (h.Type == FormField.InputType.submit)
-                {
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit, h.FieldName, labelText, value, "", errorMessage);
-                    sb.Append(html);
-                }
-                if (h.Type == FormField.InputType.hidden)
-                {
-                    var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateHidden,h.FieldName,labelText,value);
-                    sb.Append(html);
+                        var optional = boolValue ? "checked='checked'" : "";
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateCheckbox, h.FieldName, labelText, value, optional, errorMessage);
+                        sb.Append(html);
+
+                    }
+
+                    if (h.Type == FormField.InputType.select)
+                    {
+                        var htmlOptional = new StringBuilder();
+                        foreach (var item in h.DropDownValueList)
+                        {
+                            var optional = (item.Key != value) ? "selected='selected'" : "";
+                            var htmlChild = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelectOption, item.Key, item.Value, optional);
+                            htmlOptional.Append(htmlChild);
+                        }
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSelect, h.FieldName, labelText, value, htmlOptional.ToString(), errorMessage);
+                        sb.Append(html);
+                    }
+
+                    if (h.Type == FormField.InputType.submit)
+                    {
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateSubmit, h.FieldName, labelText, value, "", errorMessage);
+                        sb.Append(html);
+                    }
+                    if (h.Type == FormField.InputType.hidden)
+                    {
+                        var html = DynaFormTemplates.Replacer(DynaFormTemplates.TemplateHidden, h.FieldName, labelText, value);
+                        sb.Append(html);
+                    }
                 }
             }
 

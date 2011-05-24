@@ -27,3 +27,4 @@ C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\bin\D
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\obj\Debug\DynamicForms_Test.dll
 C:\Users\joeriks\Dropbox\33_GITHUB_ROOT\DynaForms\DynaForms\DynaForms_Test\obj\Debug\DynamicForms_Test.pdb
+C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\bin\Debug\resources\WithHtml.htm
