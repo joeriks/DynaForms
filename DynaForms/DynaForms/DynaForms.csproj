@@ -43,12 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynaForms.cs" />
+    <Compile Include="DynaFormsTemplates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="templates\InputText.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
