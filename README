@@ -13,6 +13,28 @@ Display form html:
 ------------------
 		
   @personForm.Html()		
+  
+  It will create this form:
+  
+  <form id="person" method="post" action="#">
+   <div class='labelinput'>
+    <label for='name'>Name</label>
+    <input type='text' id='name' name='name' value=''/>
+   </div>
+   <div class='labelinput'>
+    <label for='address'>Address</label>
+    <input type='text' id='address' name='address' value=''/>
+   </div>
+   <div class='labelcheckbox'>
+    <label for='active'>Active</label>
+    <input type='checkbox' id='active' name='active'/>
+   </div>
+   <div class='submit'>
+    <input type='submit' id='submit' name='submit' value='submit'/>
+   </div>
+  </form>
+  
+  
 
 Handle post:
 ------------
@@ -46,7 +68,7 @@ DynaForms create a jQuery Validate json-options string, which means you can add 
 Change html output for the controls:
 ------------------------------------
 
-Change the html for the "field controls" by editing the templates in Dynaforms.cs:
+Change the html templates for the "field controls" by editing the templates in Dynaforms.cs:
 public const string TemplateInputText = @"
  <div class='labelinput'>
   <label for='{fieldName}'>{labelText}</label>
