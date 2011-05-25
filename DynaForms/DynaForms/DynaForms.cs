@@ -21,17 +21,6 @@ namespace DynaForms
                 var nv = (NameValueCollection)o;
                 nv.Cast<string>().Select(key => new KeyValuePair<string, object>(key, nv[key])).ToList().ForEach(i => result.Add(i.Key, i));
             }
-
-            //// remove this else if block if you're not using WebMatrix Data
-            //else if (o.GetType() == typeof(WebMatrix.Data.DynamicRecord))
-            //{
-            //    var dr = o as WebMatrix.Data.DynamicRecord;
-            //    foreach (var c in dr.Columns)
-            //    {
-            //        result.Add(c, dr[c]);
-            //    }
-            //}
-
             else
             {
                 var props = o.GetType().GetProperties();
@@ -220,7 +209,44 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null)
+
+        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
+        {
+            var f = Fields.Where(w => w.FieldName == fieldName).SingleOrDefault();
+            if (f == null)
+            {
+                return AddFormField(fieldName, labelText, type, required, email, isNumeric, maxLength, minLength, max, min, regEx, dropDownValues, template, defaultValue, updateModel);
+            }
+            else
+            {
+                f.FieldName = fieldName;
+                f.LabelText = labelText;
+                f.Type = type;
+                f.Required = required;
+                f.Email = email;
+                f.MinLength = minLength;
+                f.MaxLength = maxLength;
+                f.RegEx = regEx;
+                f.Min = min;
+                f.Max = max;
+                f.Template = template;
+                f.DropDownValueList = dropDownValues;
+                f.DefaultValue = defaultValue;
+
+                return this;
+            }
+        }
+        public DynaForms.DynaForm RemoveFormField(string fieldName)
+        {
+            for (int n = 0; n < this.Fields.Count; n++)
+            {
+                if (this.Fields[n].FieldName == fieldName) this.Fields.RemoveAt(n);
+            }
+            //if (ModelDictionary.ContainsKey(fieldName)) ModelDictionary.Remove(fieldName);
+            return this;
+
+        }
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", FormField.InputType type = FormField.InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -234,33 +260,34 @@ namespace DynaForms
             f.Min = min;
             f.Max = max;
             f.Template = template;
-            f.DropDownValueList = dropDownValues;            
+            f.DropDownValueList = dropDownValues;
 
-            if (this.AutoPopulateModel && this.Model.GetType() == typeof(ExpandoObject))
+            if ((updateModel || this.AutoPopulateModel) && this.Model.GetType() == typeof(ExpandoObject))
             {
-                if (this.Model == null) this.Model = new ExpandoObject();
-                var d = this.Model as IDictionary<string, object>;
+                //if (this.Model == null) this.Model = new ExpandoObject();
+                //var d = this.Model as IDictionary<string, object>;
+
                 if (f.Type == FormField.InputType.checkbox)
                 {
-                    defaultValue = defaultValue ?? false;                    
+                    defaultValue = defaultValue ?? false;
                 }
                 else if (min != null || max != null)
                 {
-                    defaultValue = defaultValue ?? 0;                    
+                    defaultValue = defaultValue ?? 0;
                 }
                 else if (type == FormField.InputType.select && f.DropDownValueList != null)
                 {
                     var ddl = (Dictionary<string, string>)f.DropDownValueList;
-                    defaultValue = ddl.FirstOrDefault().Value;                    
+                    defaultValue = ddl.FirstOrDefault().Value;
                 }
                 else
                 {
-                    defaultValue = defaultValue ?? "";                    
+                    defaultValue = defaultValue ?? "";
                 }
-                d.Add(f.FieldName, defaultValue);
+                ModelDictionary.Add(f.FieldName, defaultValue);
             }
 
-            f.DefaultValue = defaultValue;            
+            f.DefaultValue = defaultValue;
             Fields.Add(f);
 
             return this;
@@ -348,7 +375,7 @@ namespace DynaForms
 
             if (Fields.Count() == 0)
             {
-                autoPopulateFormFields();
+                AutoPopulateFormFields();
             }
 
             //if (model == null)
@@ -538,7 +565,7 @@ jQuery('#{formname}').validate({{json}});
             return jsonString;
         }
 
-        private void autoPopulateFormFields()
+        public void AutoPopulateFormFields()
         {
             foreach (var n in ModelDictionary)
             {
@@ -556,7 +583,7 @@ jQuery('#{formname}').validate({{json}});
 
             if (Fields.Count() == 0)
             {
-                autoPopulateFormFields();
+                AutoPopulateFormFields();
             }
 
             var validationResult = new ValidationResult();
@@ -597,11 +624,35 @@ jQuery('#{formname}').validate({{json}});
                             Int32.TryParse(newValueString, out setValue);
                             newTypedValue = setValue;
                         }
+                        else if (updateType == typeof(Int32?))
+                        {
+                            Int32 setValue = 0;
+                            if (Int32.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
+                        }
                         else if (updateType == typeof(Int64))
                         {
                             Int64 setValue = 0;
                             Int64.TryParse(newValueString, out setValue);
                             newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Int64?))
+                        {
+                            Int64 setValue = 0;
+                            if (Int64.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
                         }
                         else if (updateType == typeof(Single))
                         {
@@ -609,17 +660,53 @@ jQuery('#{formname}').validate({{json}});
                             Single.TryParse(newValueString, out setValue);
                             newTypedValue = setValue;
                         }
+                        else if (updateType == typeof(Single?))
+                        {
+                            Single setValue = 0;
+                            if (Single.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
+                        }
                         else if (updateType == typeof(Double))
                         {
                             Double setValue = 0;
                             Double.TryParse(newValueString, out setValue);
                             newTypedValue = setValue;
                         }
+                        else if (updateType == typeof(Double?))
+                        {
+                            Double setValue = 0;
+                            if (Double.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
+                        }
                         else if (updateType == typeof(Decimal))
                         {
                             Decimal setValue = 0;
                             Decimal.TryParse(newValueString, out setValue);
                             newTypedValue = setValue;
+                        }
+                        else if (updateType == typeof(Decimal?))
+                        {
+                            Decimal setValue = 0;
+                            if (Decimal.TryParse(newValueString, out setValue))
+                            {
+                                newTypedValue = setValue;
+                            }
+                            else
+                            {
+                                newTypedValue = null;
+                            }
                         }
                         else if (updateType == typeof(Boolean))
                         {
