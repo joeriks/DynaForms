@@ -70,9 +70,9 @@ Change Html output for the controls:
 
 Either:
 
-1. Add a custom template when you create your forms. Use the replace keywords, {fieldName}, {value} and {errorMessage}
+1. Add a custom template when you create your forms. Use the optional replace keywords, {idName}, {labelText}, {fieldName}, {value} and {errorMessage}
 
-  var customTemplate = "<input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}\n";
+  var customTemplate = "{labelText}: <input type='text' {idName} value='{value}'/>{errorMessage}<br/>\n";
 
   var f = new DynaForms.DynaForm("formname");
   f.AddFormField("Name", template: customTemplate);
@@ -88,11 +88,11 @@ public const string TemplateInputText = @"
 Add plain Html to the forms
 --------------------------- 
 You can add plain Html with AddHtml():
-  var f = new DynaForms.DynaForm("formname");
-    .AddHtml("<fieldset>\n");
-    .AddHtml("  <legend>Fieldset 1</legend>\n"); 
-    .AddFormField("Name");
-    .AddFormField("Address");
+  var f = new DynaForms.DynaForm("formname")
+    .AddHtml("<fieldset>\n")
+    .AddHtml("  <legend>Fieldset 1</legend>\n")
+    .AddFormField("Name")
+    .AddFormField("Address")
     .AddHtml("</fieldset>\n"); 
  
 More information:
