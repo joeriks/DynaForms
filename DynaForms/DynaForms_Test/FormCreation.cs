@@ -55,7 +55,7 @@ namespace DynaForms_Test
             f.AddHtml("</fieldset>\n");
 
             f.AddHtml("<fieldset>\n");
-            f.AddFormField("Submit", type: DynaForm.FormField.InputType.submit);
+            f.AddFormField("Submit", type: InputType.submit);
             f.AddHtml("</fieldset>\n");
 
             System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\WithHtml.htm", f.Html().ToString());
@@ -87,10 +87,10 @@ namespace DynaForms_Test
             dropDownValues.Add("3", "three");
 
             f.AddFormField("name")
-             .AddFormField("check",type:DynaForm.FormField.InputType.checkbox)
-             .AddFormField("value",type:DynaForm.FormField.InputType.textarea)
-             .AddFormField("dropdown", type:DynaForm.FormField.InputType.select, dropDownValues: dropDownValues)
-             .AddFormField("submit", type:DynaForm.FormField.InputType.submit);
+             .AddFormField("check",type:InputType.checkbox)
+             .AddFormField("value",type:InputType.textarea)
+             .AddFormField("dropdown", type:InputType.select, dropDownValues: dropDownValues)
+             .AddFormField("submit", type:InputType.submit);
 
             System.IO.File.WriteAllText(@"C:\Users\jonas\DynaForms\DynaForms\DynaForms_Test\resources\form4.htm", f.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText("form4.htm");
@@ -109,7 +109,7 @@ namespace DynaForms_Test
 
             var f = new DynaForms.DynaForm("myform", p);
             f.AddFormField("Name")
-             .AddFormField("Check",type:DynaForm.FormField.InputType.checkbox)
+             .AddFormField("Check",type:InputType.checkbox)
              .AddFormField("PrintedDateTime")
              .AddFormField("CreationDate");
 

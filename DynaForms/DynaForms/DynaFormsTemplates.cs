@@ -7,35 +7,37 @@ namespace DynaForms
 {
     public class DynaFormTemplates
     {
+        public const string TemplateIdName = @"id='{fieldName}' name='{fieldName}'";
+
         public const string TemplateInputText = @"
  <div class='labelinput'>
   <label for='{fieldName}'>{labelText}</label>
-  <input type='text' id='{fieldName}' name='{fieldName}' value='{value}'/>{errorMessage}
+  <input type='text' {idName} value='{value}'/>{errorMessage}
  </div>";
         public const string TemplateTextArea = @"
  <div class='labeltextarea'>
   <label for='{fieldName}'>{labelText}</label>
-  <textarea id='{fieldName}' name='{fieldName}'>{value}</textarea>{errorMessage}
+  <textarea {idName}>{value}</textarea>{errorMessage}
  </div>";
         public const string TemplateCheckbox = @"
  <div class='labelcheckbox'>
   <label for='{fieldName}'>{labelText}</label>
-  <input type='checkbox' id='{fieldName}' name='{fieldName}' {optional} value='{value}'/>{errorMessage}
+  <input type='checkbox' {idName} {optional} value='{value}'/>{errorMessage}
  </div>";
         public const string TemplateSelect = @"
  <div class='labelselect'>
   <label for='{fieldName}'>{labelText}</label>
-  <select id='{fieldName}' name='{fieldName}'>{optional}
+  <select {idName}>{optional}
   </select>
  </div>";
         public const string TemplateSelectOption = @"
     <option value='{key}'>{value}</option>";
         public const string TemplateSubmit = @"
  <div class='submit'>
-  <input type='submit' id='{fieldName}' name='{fieldName}' value='{fieldName}'/>{errorMessage}
+  <input type='submit' {idName} value='{fieldName}'/>{errorMessage}
  </div>";
         public const string TemplateHidden = @"
-  <input type='hidden' id='{fieldName}' name='{fieldName}' value='{value}'/>";
+  <input type='hidden' {idName} value='{value}'/>";
 
         public const string MessageRequiredField = "Required field ";
         public const string MessageInvalidEmailAddress = "Invalid email address ";
