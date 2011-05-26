@@ -46,7 +46,10 @@ namespace DynaForms_Test
             form.AddFormField("Submit", type: InputType.submit);
             form.AddHtml("</fieldset>\n");
 
+            // Uncomment the following row to re-create output html - then look at it manually and open it in a browser
             System.IO.File.WriteAllText(defaultOutputPath + fileName, form.Html().ToString());
+            // After you recreated it you need to include the file in the project and also mark it (properties on the file) for "Copy to output"
+
             var expectedResult = System.IO.File.ReadAllText(fileName);
             Assert.AreEqual(expectedResult, form.Html().ToString());
 
