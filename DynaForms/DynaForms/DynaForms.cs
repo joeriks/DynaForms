@@ -85,6 +85,7 @@ namespace DynaForms
             public string RegEx { get; set; }
             public int? Min { get; set; }
             public int? Max { get; set; }
+            public bool Numeric { get; set; }
             public string Html { get; set; }
             public string Template { get; set; }
             public object DefaultValue { get; set; }
@@ -254,7 +255,7 @@ namespace DynaForms
             return this;
 
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, bool required = false, bool email = false, bool numeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -267,6 +268,7 @@ namespace DynaForms
             f.RegEx = regEx;
             f.Min = min;
             f.Max = max;
+            f.Numeric = numeric;
             f.Template = template;
             f.DropDownValueList = dropDownValues;
 
@@ -338,10 +340,14 @@ namespace DynaForms
             {
 
                 var dictionaryValueString = "";
+                bool isNumeric = false;
+                decimal dictionaryValueDecimal = 0;
 
                 if (ModelDictionary.ContainsKey(x.FieldName) && ModelDictionary[x.FieldName] != null)
                 {
-                    dictionaryValueString = ModelDictionary[x.FieldName].ToString();
+                    dictionaryValueString = ModelDictionary[x.FieldName].ToString();                    
+                    if (Decimal.TryParse(dictionaryValueString, out dictionaryValueDecimal))
+                        isNumeric = true;
                 }
 
                 if (x.Required && string.IsNullOrEmpty(dictionaryValueString))
@@ -359,6 +365,18 @@ namespace DynaForms
                 if (x.MaxLength != 0 && dictionaryValueString.Length > x.MaxLength)
                 {
                     validationResult.AddError(x.FieldName, DynaFormTemplates.MessageMaximumLengthIs + x.MaxLength.ToString(), x.Label());
+                }
+                if (x.Numeric && !isNumeric)
+                {
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageNumeric, x.Label());
+                }
+                if (x.Min != null && (isNumeric || dictionaryValueDecimal < x.Min))
+                {
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageMinValueIs + x.Min.ToString(), x.Label());
+                }
+                if (x.Max != null && (isNumeric || dictionaryValueDecimal > x.Max))
+                {
+                    validationResult.AddError(x.FieldName, DynaFormTemplates.MessageMaxValueIs + x.Max.ToString(), x.Label());
                 }
                 if (x.RegEx != "" && !IsValidRegex(dictionaryValueString, x.RegEx))
                 {

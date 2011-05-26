@@ -44,6 +44,9 @@ namespace DynaForms
         public const string MessageMinimumLengthIs = "Minimum length is ";
         public const string MessageMaximumLengthIs = "Maximum length is ";
         public const string MessageInvalid = "Invalid ";
+        public const string MessageNumeric= "Numeric value required ";
+        public const string MessageMinValueIs = "Minimum value is ";
+        public const string MessageMaxValueIs = "Maximum value is ";
 
     }
 

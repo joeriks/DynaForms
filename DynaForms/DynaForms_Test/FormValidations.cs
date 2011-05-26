@@ -24,6 +24,56 @@ namespace DynaForms_Test
 
         }
         [TestMethod]
+        public void FormValidation_InvalidNumericField_ShouldNotValidate()
+        {
+            var f = new DynaForm("form2")
+                .AddFormField("number", numeric:true);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("number", "not number");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
+        public void FormValidation_Minimum_ShouldNotValidate()
+        {
+            var f = new DynaForm("form2")
+                .AddFormField("number", numeric: true, min:4);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("number", "2");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
+        public void FormValidation_Minimum_ShouldValidate()
+        {
+            var f = new DynaForm("form2")
+                .AddFormField("number", numeric: true, min: 4);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("number", "7");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
+        public void FormValidation_Maximum_ShouldNotValidate()
+        {
+            var f = new DynaForm("form2")
+                .AddFormField("number", numeric: true, max: 4);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("number", "8");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
+        public void FormValidation_Maximum_ShouldValidate()
+        {
+            var f = new DynaForm("form2")
+                .AddFormField("number", numeric: true, max: 4);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("number", "4");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
         public void FormValidation_OneValidField_ShouldValidate()
         {
             var f = new DynaForm("form2")
