@@ -1,12 +1,24 @@
 With the help of the one-file DynaForms.cs (just add it to your App_Code folder for your WebMatrix or MVC-projects) you can create and handle Html forms easily.
 
-Basic add new form:
--------------------
+Basic add new form with built in templates:
+-------------------------------------------
 
-  var personForm = new DynaForms.DynaForm("person")
+  var personForm = new DynaForm("person")
     .AddFormField("Name", required: true)        
     .AddFormField("Address")
-    .AddFormField("Active", type: DynaForm.FormField.InputType.checkbox);
+    .AddFormField("Active", type: InputType.checkbox);
+
+
+Basic add new form with custom templates:
+-----------------------------------------
+
+  Define the html template with parameters like this (idName will be replaced with id='{fieldName' name='{fieldName'}):
+
+  var customTemplate = "{labelText}: <input type='text' {idName} value='{value}'/>{errorMessage}<br/>\n";
+
+  var f = new DynaForm("formname");
+  f.AddFormField("Name", template: customTemplate);
+  f.AddFormField("Address", template: customTemplate);
 
 
 Display form html:		
@@ -14,7 +26,7 @@ Display form html:
 		
   @personForm.Html()		
   
-  It will create this form:
+  Based on the built in templates with the sample above it will create this form:
   
   <form id="person" method="post" action="#">
    <div class='labelinput'>
@@ -72,12 +84,6 @@ Either:
 
 1. Add a custom template when you create your forms. Use the optional replace keywords, {idName}, {labelText}, {fieldName}, {value} and {errorMessage}
 
-  var customTemplate = "{labelText}: <input type='text' {idName} value='{value}'/>{errorMessage}<br/>\n";
-
-  var f = new DynaForms.DynaForm("formname");
-  f.AddFormField("Name", template: customTemplate);
-  f.AddFormField("Address", template: customTemplate);
-
 2. Or change the default html templates for the "field controls" by editing the templates in DynaFormTemplates.cs:
 public const string TemplateInputText = @"
  <div class='labelinput'>
@@ -88,7 +94,7 @@ public const string TemplateInputText = @"
 Add plain Html to the forms
 --------------------------- 
 You can add plain Html with AddHtml():
-  var f = new DynaForms.DynaForm("formname")
+  var f = new DynaForm("formname")
     .AddHtml("<fieldset>\n")
     .AddHtml("  <legend>Fieldset 1</legend>\n")
     .AddFormField("Name")
