@@ -345,7 +345,7 @@ namespace DynaForms
 
             this.Model = model;
 
-            foreach (var x in Fields)
+            foreach (var x in Fields.Where(f => f.Type != InputType.html))
             {
 
                 var dictionaryValueString = "";
@@ -625,7 +625,7 @@ jQuery('#{formname}').validate({{json}});
 
             try
             {
-                foreach (var varFields in Fields.Where(f=>f.Type!=InputType.html))
+                foreach (var varFields in Fields.Where(f => f.Type != InputType.html))
                 {
                     var newValueKey = varFields.FieldName;
                     var newValueString = "";
