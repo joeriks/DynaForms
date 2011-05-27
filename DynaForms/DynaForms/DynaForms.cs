@@ -21,7 +21,7 @@ namespace DynaForms
         submit
     }
 
-    
+
     public static class ObjectExtensions
     {
         public static Dictionary<string, object> ToDictionary(this object o)
@@ -199,7 +199,7 @@ namespace DynaForms
 
         public static string Replacer(string template, string fieldName, string labelText, string value = "", string optional = "", string errorMessage = "")
         {
-            var retval = template.Replace("{idName}",ReplacerIdName(fieldName))
+            var retval = template.Replace("{idName}", ReplacerIdName(fieldName))
                         .Replace("{fieldName}", fieldName)
                         .Replace("{labelText}", labelText)
                         .Replace("{value}", value)
@@ -325,9 +325,18 @@ namespace DynaForms
             {
                 if (ModelDictionary.ContainsKey(f.FieldName))
                 {
-                    ModelDictionary[f.FieldName] = f.DefaultValue;
+                    if (Model.GetType() == typeof(ExpandoObject))
+                    {
+                        ModelDictionary[f.FieldName] = f.DefaultValue;
+                    }
+                    else
+                    {
+                        Model.GetType().GetProperty(f.FieldName).SetValue(Model, f.DefaultValue, null);
+                    }
                 }
             }
+
+
         }
         public ValidationResult Validate(object model, ValidationResult validationResult = null)
         {
@@ -345,7 +354,7 @@ namespace DynaForms
 
                 if (ModelDictionary.ContainsKey(x.FieldName) && ModelDictionary[x.FieldName] != null)
                 {
-                    dictionaryValueString = ModelDictionary[x.FieldName].ToString();                    
+                    dictionaryValueString = ModelDictionary[x.FieldName].ToString();
                     if (Decimal.TryParse(dictionaryValueString, out dictionaryValueDecimal))
                         isNumeric = true;
                 }
