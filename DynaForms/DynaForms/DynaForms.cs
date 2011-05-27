@@ -625,7 +625,7 @@ jQuery('#{formname}').validate({{json}});
 
             try
             {
-                foreach (var varFields in Fields)
+                foreach (var varFields in Fields.Where(f=>f.Type!=InputType.html))
                 {
                     var newValueKey = varFields.FieldName;
                     var newValueString = "";
