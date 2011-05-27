@@ -18,14 +18,14 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "localhost", "http://localho
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{93569466-A124-45E2-A6F6-49AF7EBD72D8}|DynaForms.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52692"
-		Debug.AspNetCompiler.PhysicalPath = "..\Sample_WebPages\"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\..\Visual Studio 2010\Projects\GitHub\DynaForms\Sample_WebPages\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52692\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_52692"
-		Release.AspNetCompiler.PhysicalPath = "..\Sample_WebPages\"
+		Release.AspNetCompiler.PhysicalPath = "..\..\..\Visual Studio 2010\Projects\GitHub\DynaForms\Sample_WebPages\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52692\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
@@ -33,6 +33,26 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "localhost", "http://localho
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "..\Sample_WebPages\"
 		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Sample_PetaPoco", "..\Sample_PetaPoco\", "{EB11E79F-9E80-4D57-A279-DA61D74E95E8}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/Sample_PetaPoco"
+		Debug.AspNetCompiler.PhysicalPath = "..\Sample_PetaPoco\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Sample_PetaPoco\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Sample_PetaPoco"
+		Release.AspNetCompiler.PhysicalPath = "..\Sample_PetaPoco\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Sample_PetaPoco\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61146"
 	EndProjectSection
 EndProject
 Global
@@ -56,6 +76,10 @@ Global
 		{BA09CC81-DEA6-42FA-8840-D7B1C68EC905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA09CC81-DEA6-42FA-8840-D7B1C68EC905}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA09CC81-DEA6-42FA-8840-D7B1C68EC905}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{EB11E79F-9E80-4D57-A279-DA61D74E95E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB11E79F-9E80-4D57-A279-DA61D74E95E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB11E79F-9E80-4D57-A279-DA61D74E95E8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB11E79F-9E80-4D57-A279-DA61D74E95E8}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
