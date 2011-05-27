@@ -1,4 +1,4 @@
-With the help of the one-file DynaForms.cs (just add it to your App_Code folder for your WebMatrix or MVC-projects) you can create and handle Html forms easily.
+With the help of the files DynaForms.cs & DynaFormTemplates.cs (just add them to your App_Code folder for your WebMatrix or MVC-projects) you can create and handle Html forms easily.
 
 Basic add new form with built in templates:
 -------------------------------------------
@@ -55,8 +55,10 @@ Handle post:
   {
     if (personForm.TryUpdateModel().IsValid)
     {
-      // Form is valid - insert into DB. Get the model from the dynaform, by default it's an ExpandoObject:
+      // Form is valid. Get the model from the dynaform, by default it's an ExpandoObject:
       dynamic result = personForm.Model;
+
+      // Insert result into the db
       db.Execute("INSERT INTO person (Name, Address, Active) VALUES (@0,@1,@2)", result.Name, result.Address, result.Active);
     }
     else
@@ -75,6 +77,8 @@ DynaForms create a jQuery Validate json-options string, which means you can add 
 <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.8/jquery.validate.min.js'></script>
 
 @Html.Raw(personForm.ClientSideScript())
+
+Currently the client side rules are "required", "email", "maxlength", "minlength", "max" and "min". On server side there's also a Regex rule.
 
 
 Change Html output for the controls:
