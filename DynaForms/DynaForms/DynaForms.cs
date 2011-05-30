@@ -46,30 +46,30 @@ namespace DynaForms
 
     public partial class DynaFormTemplates
     {
-        public static string TemplateFormHeader = @"<form action='{action}' method='{method}'{optionalClassCssName}>\n";
+        public static string TemplateFormHeader = @"<form {idName} action='{action}' method='{method}'{optionalClassCssName}>";
 
         public static string TemplateErrorMessage = @"<div class='error'>{errorMessage}</div>";
 
-        public static string TemplateIdName = @"id='{fieldName}' name='{fieldName}'";
+        public static string TemplateIdName = @"id='{name}' name='{name}'";
 
         public static string TemplateInputText = @"
  <div{optionalClassCssName}>
-  <label for='{fieldName}'>{labelText}</label>
+  <label for='{name}'>{labelText}</label>
   <input type='text' {idName} value='{value}'/>{errorMessage}
  </div>";
         public static string TemplateTextArea = @"
  <div{optionalClassCssName}>
-  <label for='{fieldName}'>{labelText}</label>
+  <label for='{name}'>{labelText}</label>
   <textarea {idName}>{value}</textarea>{errorMessage}
  </div>";
         public static string TemplateCheckbox = @"
  <div{optionalClassCssName}>
-  <label for='{fieldName}'>{labelText}</label>
+  <label for='{name}'>{labelText}</label>
   <input type='checkbox' {idName} {optional} value='{value}'/>{errorMessage}
  </div>";
         public static string TemplateSelect = @"
  <div{optionalClassCssName}'>
-  <label for='{fieldName}'>{labelText}</label>
+  <label for='{name}'>{labelText}</label>
   <select {idName}>{optional}
   </select>
  </div>";
@@ -77,7 +77,7 @@ namespace DynaForms
     <option value='{key}'>{value}</option>";
         public static string TemplateSubmit = @"
  <div{optionalClassCssName}>
-  <input type='submit' {idName} value='{fieldName}'/>{errorMessage}
+  <input type='submit' {idName} value='{name}'/>{errorMessage}
  </div>";
         public static string TemplateHidden = @"
   <input type='hidden' {idName} value='{value}'/>";
@@ -136,6 +136,7 @@ namespace DynaForms
             public string Template { get; set; }
             public object DefaultValue { get; set; }
             public string CssName { get; set; }
+            public string ErrorMessage { get; set; }
 
             public Dictionary<string, string> DropDownValueList { get; set; }
 
@@ -152,6 +153,7 @@ namespace DynaForms
             //public string MinLengthMessage { get; set; }
             //public string MaxLengthMessage { get; set; }
             //public string RegExMessage { get; set; }            
+
 
         }
 
@@ -267,7 +269,7 @@ namespace DynaForms
         public static string ReplacerField(string template, string fieldName, string labelText, string value = "", string optional = "", string cssName = "", string errorMessage = "")
         {
             var retval = template.Replace("{idName}", ReplacerIdName(fieldName))
-                        .Replace("{fieldName}", fieldName)
+                        .Replace("{name}", fieldName)
                         .Replace("{labelText}", labelText)
                         .Replace("{value}", value)
                         .Replace("{optional}", optional)
@@ -296,12 +298,12 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
+        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", string errorMessage = "", object defaultValue = null, bool updateModel = false)
         {
             var f = Fields.Where(w => w.FieldName == fieldName).SingleOrDefault();
             if (f == null)
             {
-                return AddFormField(fieldName, labelText, type, cssName, required, email, isNumeric, maxLength, minLength, max, min, regEx, dropDownValues, template, defaultValue, updateModel);
+                return AddFormField(fieldName, labelText, type, cssName, required, email, isNumeric, maxLength, minLength, max, min, regEx, dropDownValues, template, errorMessage, defaultValue, updateModel);
             }
             else
             {
@@ -319,6 +321,7 @@ namespace DynaForms
                 f.Template = template;
                 f.DropDownValueList = dropDownValues;
                 f.DefaultValue = defaultValue;
+                f.ErrorMessage = errorMessage;
 
                 return this;
             }
@@ -333,7 +336,7 @@ namespace DynaForms
             return this;
 
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool numeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", object defaultValue = null, bool updateModel = false)
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool numeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", string errorMessage = "", object defaultValue = null, bool updateModel = false)
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -350,6 +353,7 @@ namespace DynaForms
             f.Numeric = numeric;
             f.Template = template;
             f.DropDownValueList = dropDownValues;
+            f.ErrorMessage = errorMessage;
 
             if ((updateModel || this.AutoPopulateModel) && this.Model.GetType() == typeof(ExpandoObject))
             {
@@ -485,9 +489,8 @@ namespace DynaForms
             if (!omitFormTag)
             {
                 if (formHeaderTemplate == "") formHeaderTemplate = DynaFormTemplates.TemplateFormHeader;
-
-
-                sb.Append("<form id='" + Name + "' method='" + method + "' action='" + action + "'>\n");
+                var formHeader = ReplacerFormHeader(formHeaderTemplate, this.Name, method, action, this.CssName);
+                sb.Append(formHeader);
             }
 
             if (model != null)
@@ -643,6 +646,7 @@ jQuery('#{formname}').validate({{json}});
         {
             var jsonString = "rules: {\n";
             var rules = "";
+            var messages = "";
             foreach (var h in Fields)
             {
                 var fieldRules = "";
@@ -679,10 +683,22 @@ jQuery('#{formname}').validate({{json}});
                     rules += h.FieldName + ": {";
                     rules += fieldRules + "}";
                 }
+                if (h.ErrorMessage != "")
+                {
+                    messages += h.FieldName + ": '" + h.ErrorMessage + "', ";
+                }
 
             }
             jsonString += rules;
+
             jsonString += "}\n";
+
+            if (messages != "")
+            {
+                messages = messages.TrimEnd(',');
+                jsonString += ",\nmessages: {\n" + messages + "\n}";
+            }
+            
 
             return jsonString;
         }
