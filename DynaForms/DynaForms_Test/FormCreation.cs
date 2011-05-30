@@ -17,9 +17,9 @@ namespace DynaForms_Test
         {
             var project = new Project();
             var x = new DynaForms.DynaForm("formname", project);
-            Assert.AreEqual(x.Name,"formname");
+            Assert.AreEqual(x.Name, "formname");
         }
-        
+
         [TestMethod]
         [DeploymentItem("resources//CustomHtml.htm")]
         public void FormCreation_CustomHtml()
@@ -31,13 +31,13 @@ namespace DynaForms_Test
             var form = new DynaForms.DynaForm(formName, project);
 
             form.AddHtml("<fieldset>\n");
-            form.AddHtml("  <legend>Fieldset 1</legend>\n"); 
+            form.AddHtml("  <legend>Fieldset 1</legend>\n");
             form.AddFormField("Name");
             form.AddFormField("Address");
             form.AddHtml("</fieldset>\n");
 
             form.AddHtml("<fieldset>\n");
-            form.AddHtml("  <legend>Fieldset 2</legend>\n"); 
+            form.AddHtml("  <legend>Fieldset 2</legend>\n");
             form.AddFormField("Phone 1");
             form.AddFormField("Phone 2");
             form.AddHtml("</fieldset>\n");
@@ -54,7 +54,7 @@ namespace DynaForms_Test
             Assert.AreEqual(expectedResult, form.Html().ToString());
 
         }
-        
+
         [TestMethod]
         [DeploymentItem("resources//Simple.htm")]
         public void FormCreation_Simple()
@@ -66,7 +66,7 @@ namespace DynaForms_Test
             f.AddFormField("name").AddFormField("value");
 
             System.IO.File.WriteAllText(defaultOutputPath + fileName, f.Html().ToString());
-            var expectedResult = System.IO.File.ReadAllText(fileName);            
+            var expectedResult = System.IO.File.ReadAllText(fileName);
             Assert.AreEqual(expectedResult, f.Html().ToString());
         }
 
@@ -83,11 +83,11 @@ namespace DynaForms_Test
             dropDownValues.Add("2", "two");
             dropDownValues.Add("3", "three");
 
-            form.AddFormField("name")
-             .AddFormField("check",type:InputType.checkbox)
-             .AddFormField("value",type:InputType.textarea)
-             .AddFormField("dropdown", type:InputType.select, dropDownValues: dropDownValues)
-             .AddFormField("submit", type:InputType.submit);
+            form.AddFormField("name", cssName: "inputfield")
+             .AddFormField("check", cssName: "inputfield", type: InputType.checkbox)
+             .AddFormField("value", cssName: "inputfield", type: InputType.textarea)
+             .AddFormField("dropdown", cssName: "inputfield", type: InputType.select, dropDownValues: dropDownValues)
+             .AddFormField("submit", cssName: "inputfield", type: InputType.submit);
 
             System.IO.File.WriteAllText(defaultOutputPath + fileName, form.Html().ToString());
             var expectedResult = System.IO.File.ReadAllText(fileName);
@@ -109,7 +109,7 @@ namespace DynaForms_Test
 
             var form = new DynaForms.DynaForm(formName, p);
             form.AddFormField("Name")
-             .AddFormField("Check",type:InputType.checkbox)
+             .AddFormField("Check", type: InputType.checkbox)
              .AddFormField("PrintedDateTime")
              .AddFormField("CreationDate");
 
@@ -122,7 +122,7 @@ namespace DynaForms_Test
         [DeploymentItem("resources//FormCreation_CustomBasicTemplate.htm")]
         public void FormCreation_CustomBasicTemplate()
         {
-            var inputText = "{labelText} : <input type='text' {idName} />{errorMessage}<br/>";
+            var inputText = "{labelText} : <input type='text' {idName} />{errorMessage}<br/>\n";
 
             var testForm = new DynaForm("formname", autoAddSubmit: false)
                    .AddFormField("Name", template: inputText)

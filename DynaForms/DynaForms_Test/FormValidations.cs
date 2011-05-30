@@ -74,6 +74,27 @@ namespace DynaForms_Test
             Assert.IsFalse(f.Validation.IsValid);
         }
         [TestMethod]
+        public void FormValidation_Email_ShouldNotValidate()
+        {
+            var f = new DynaForm("form")
+                .AddFormField("emailaddress", email: true);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("emailaddress", "invalidaddress@com");
+            f.TryUpdateModel(formMock);
+            Assert.IsFalse(f.Validation.IsValid);
+        }
+        [TestMethod]
+        public void FormValidation_Email_ShouldValidate()
+        {
+            var f = new DynaForm("form")
+                .AddFormField("emailaddress", email: true);
+            var formMock = new System.Collections.Specialized.NameValueCollection();
+            formMock.Add("emailaddress", "invalidaddress@company.com");
+            f.TryUpdateModel(formMock);
+            Assert.IsTrue(f.Validation.IsValid);
+        }
+
+        [TestMethod]
         public void FormValidation_OneValidField_ShouldValidate()
         {
             var f = new DynaForm("form2")
