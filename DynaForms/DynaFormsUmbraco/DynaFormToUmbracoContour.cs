@@ -11,9 +11,51 @@ namespace DynaFormsExtensionMethods
 {
     public static class DynaFormToUmbracoContour
     {
-        public static string SaveToContour(this DynaForm dynaform, string formGuid, string userIpAddress = "", int umbracoPageId = 0)
+        public static string AddFieldsFromContour(this DynaForm dynaform, string formGuid)
         {
             var retval = "";
+            using (var recordStorage = new RecordStorage())
+            using (var formStorage = new FormStorage())
+            {
+                var form = formStorage.GetForm(new Guid(formGuid));
+                foreach (var field in form.AllFields.OrderBy(f => f.SortOrder))
+                {
+                    var inputType = InputType.text;
+                    var fieldName = "f" + field.Id.ToString().Replace('-', '_');
+                    var defaultValue = "";
+                    if (field.Values.Count > 0)
+                        defaultValue = field.Values[0].ToString();
+                    var cssName = "";
+                    if (field.Mandatory)
+                        cssName = "required";
+
+                    if (field.FieldType.ToString() == "Umbraco.Forms.Core.Providers.FieldTypes.DropDownList")
+                    {
+                        dynaform.AddFormField(fieldName, field.Caption, type: InputType.select, defaultValue: defaultValue, cssName: cssName);
+                    }
+                    else if (field.FieldType.ToString() == "Umbraco.Forms.Core.Providers.FieldTypes.Hidden")
+                    {
+                        dynaform.AddFormField(fieldName, field.Caption, type: InputType.hidden, defaultValue: defaultValue, cssName: cssName);
+                    }
+                    else
+                    {
+                        dynaform.AddFormField(fieldName, field.Caption, type: InputType.text, defaultValue: defaultValue, required: field.Mandatory, errorMessage: field.RequiredErrorMessage, cssName: cssName);
+                    }
+                    
+                }
+            }
+            return retval;
+        }
+
+        public static string SaveToContour(this DynaForm dynaform, string formGuid, string userIpAddress = "", int umbracoPageId = 0)
+        {
+            var ignoreId = "";
+            return SaveToContour(dynaform, formGuid, out ignoreId, userIpAddress, umbracoPageId);
+        }
+        public static string SaveToContour(this DynaForm dynaform, string formGuid, out string insertedRecordId, string userIpAddress = "", int umbracoPageId = 0)
+        {
+            var message = "";
+            insertedRecordId = "";
 
             using (var recordStorage = new RecordStorage())
             using (var formStorage = new FormStorage())
@@ -35,7 +77,11 @@ namespace DynaFormsExtensionMethods
                         string currentFieldValue = "";
                         string contourFieldName = field.Caption.TrimStart('#');
 
-                        if (dynaform.ModelDictionary.ContainsKey(contourFieldName))
+                        if (dynaform.ModelDictionary.ContainsKey("f" + field.Id.ToString().Replace('-', '_')))
+                        {
+                            currentFieldValue = dynaform.ModelDictionary["f" + field.Id.ToString().Replace('-', '_')].ToString();
+                        }
+                        else if (dynaform.ModelDictionary.ContainsKey(contourFieldName))
                         {
                             currentFieldValue = dynaform.ModelDictionary[contourFieldName].ToString();
                         }
@@ -54,14 +100,16 @@ namespace DynaFormsExtensionMethods
 
                         record.RecordFields.Add(key, recordField);
 
-                        retval = record.Id.ToString();
+                        insertedRecordId = record.Id.ToString();
                     }
                     recordService.Submit();
                     recordService.SaveFormToRecord();
+                    
 
                 }
+                message=form.MessageOnSubmit;
             }
-            return retval;
+            return message;
 
         }
     }

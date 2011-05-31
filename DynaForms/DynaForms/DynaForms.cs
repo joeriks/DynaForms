@@ -12,6 +12,7 @@ namespace DynaForms
 {
     public enum InputType
     {
+        undefined,
         html,
         text,
         select,
@@ -54,22 +55,22 @@ namespace DynaForms
 
         public static string TemplateInputText = @"
  <div{optionalClassCssName}>
-  <label for='{name}'>{labelText}</label>
+  <label for='{name}'{optionalClassLabelCssName}>{labelText}</label>
   <input type='text' {idName} value='{value}'/>{errorMessage}
  </div>";
         public static string TemplateTextArea = @"
  <div{optionalClassCssName}>
-  <label for='{name}'>{labelText}</label>
+  <label for='{name}'{optionalClassLabelCssName}>{labelText}</label>
   <textarea {idName}>{value}</textarea>{errorMessage}
  </div>";
         public static string TemplateCheckbox = @"
  <div{optionalClassCssName}>
-  <label for='{name}'>{labelText}</label>
+  <label for='{name}'{optionalClassLabelCssName}>{labelText}</label>
   <input type='checkbox' {idName} {optional} value='{value}'/>{errorMessage}
  </div>";
         public static string TemplateSelect = @"
- <div{optionalClassCssName}'>
-  <label for='{name}'>{labelText}</label>
+ <div{optionalClassCssName}>
+  <label for='{name}'{optionalClassLabelCssName}>{labelText}</label>
   <select {idName}>{optional}
   </select>
  </div>";
@@ -136,6 +137,7 @@ namespace DynaForms
             public string Template { get; set; }
             public object DefaultValue { get; set; }
             public string CssName { get; set; }
+            public string LabelCssName { get; set; }
             public string ErrorMessage { get; set; }
 
             public Dictionary<string, string> DropDownValueList { get; set; }
@@ -266,7 +268,7 @@ namespace DynaForms
 
             return retval;
         }
-        public static string ReplacerField(string template, string fieldName, string labelText, string value = "", string optional = "", string cssName = "", string errorMessage = "")
+        public static string ReplacerField(string template, string fieldName, string labelText, string value = "", string optional = "", string cssName = "", string errorMessage = "", string labelCssName = "")
         {
             var retval = template.Replace("{idName}", ReplacerIdName(fieldName))
                         .Replace("{name}", fieldName)
@@ -283,9 +285,19 @@ namespace DynaForms
             {
                 retval = retval.Replace("{optionalClassCssName}", "");
             }
-
             retval = retval.Replace("{cssName}", cssName);
 
+            if (labelCssName != "")
+            {
+                retval = retval.Replace("{optionalClassLabelCssName}", " class='{labelCssName}'");
+            }
+            else
+            {
+                retval = retval.Replace("{optionalClassLabelCssName}", "");
+            }
+            retval = retval.Replace("{labelCssName}", labelCssName);
+
+            
             return retval;
         }
 
@@ -298,31 +310,31 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool isNumeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", string errorMessage = "", object defaultValue = null, bool updateModel = false)
+        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = null, InputType type = InputType.undefined, string cssName = null, bool? required = null, bool? email = null, bool? isNumeric = null, int? maxLength = null, int? minLength = null, int? max = null, int? min = null, string regEx = null, Dictionary<string, string> dropDownValues = null, string template = null, string errorMessage = null, object defaultValue = null, bool? updateModel = null)
         {
             var f = Fields.Where(w => w.FieldName == fieldName).SingleOrDefault();
             if (f == null)
             {
-                return AddFormField(fieldName, labelText, type, cssName, required, email, isNumeric, maxLength, minLength, max, min, regEx, dropDownValues, template, errorMessage, defaultValue, updateModel);
+                //return AddFormField(fieldName, labelText, type, cssName, required, email, isNumeric, maxLength, minLength, max, min, regEx, dropDownValues, template, errorMessage, defaultValue, updateModel);
+                return this;
             }
             else
             {
-                f.FieldName = fieldName;
-                f.LabelText = labelText;
-                f.Type = type;
-                f.CssName = cssName;
-                f.Required = required;
-                f.Email = email;
-                f.MinLength = minLength;
-                f.MaxLength = maxLength;
-                f.RegEx = regEx;
-                f.Min = min;
-                f.Max = max;
-                f.Template = template;
-                f.DropDownValueList = dropDownValues;
-                f.DefaultValue = defaultValue;
-                f.ErrorMessage = errorMessage;
-
+                if (labelText!=null) f.LabelText = labelText;
+                if (type != InputType.undefined) f.Type = type;
+                if (cssName!=null) f.CssName = cssName;
+                if (required != null) f.Required = required.GetValueOrDefault();
+                if (email != null) f.Email = email.GetValueOrDefault();
+                if (minLength != null) f.MinLength = minLength.GetValueOrDefault();
+                if (maxLength != null) f.MaxLength = maxLength.GetValueOrDefault();
+                if (regEx!=null) f.RegEx = regEx??"";
+                if (min!=null) f.Min = min;
+                if (max!=null) f.Max = max;
+                if (template != null) f.Template = template??"";
+                if (dropDownValues!=null) f.DropDownValueList = dropDownValues;
+                if (defaultValue!=null) f.DefaultValue = defaultValue;
+                if (errorMessage != null) f.ErrorMessage = errorMessage??"";
+                
                 return this;
             }
         }
@@ -336,7 +348,7 @@ namespace DynaForms
             return this;
 
         }
-        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool numeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", string errorMessage = "", object defaultValue = null, bool updateModel = false)
+        public DynaForms.DynaForm AddFormField(string fieldName, string labelText = "", InputType type = InputType.text, string cssName = "", bool required = false, bool email = false, bool numeric = false, int maxLength = 0, int minLength = 0, int? max = null, int? min = null, string regEx = "", Dictionary<string, string> dropDownValues = null, string template = "", string errorMessage = "", object defaultValue = null, bool updateModel = false, string labelCssName="")
         {
             var f = new FormField();
             f.FieldName = fieldName;
@@ -354,6 +366,7 @@ namespace DynaForms
             f.Template = template;
             f.DropDownValueList = dropDownValues;
             f.ErrorMessage = errorMessage;
+            f.LabelCssName = labelCssName;
 
             if ((updateModel || this.AutoPopulateModel) && this.Model.GetType() == typeof(ExpandoObject))
             {
@@ -567,13 +580,13 @@ namespace DynaForms
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateInputText;
 
-                        var html = ReplacerField(template, h.FieldName, labelText, value,cssName:h.CssName,errorMessage: errorMessage);
+                        var html = ReplacerField(template, h.FieldName, labelText, value,cssName:h.CssName,errorMessage: errorMessage,labelCssName:h.LabelCssName);
                         sb.Append(html);
                     }
                     if (h.Type == InputType.textarea)
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateTextArea;
-                        var html = ReplacerField(template, h.FieldName, labelText, value, cssName: h.CssName, errorMessage: errorMessage);
+                        var html = ReplacerField(template, h.FieldName, labelText, value, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
                         sb.Append(html);
                     }
                     if (h.Type == InputType.checkbox)
@@ -584,7 +597,7 @@ namespace DynaForms
                         Boolean.TryParse(value, out boolValue);
 
                         var optional = boolValue ? "checked='checked'" : "";
-                        var html = ReplacerField(template, h.FieldName, labelText, value, optional, cssName: h.CssName, errorMessage: errorMessage);
+                        var html = ReplacerField(template, h.FieldName, labelText, value, optional, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
                         sb.Append(html);
 
                     }
@@ -600,7 +613,7 @@ namespace DynaForms
                             var htmlChild = ReplacerKeyValue(DynaFormTemplates.TemplateSelectOption, item.Key, item.Value, optional);
                             htmlOptional.Append(htmlChild);
                         }
-                        var html = ReplacerField(template, h.FieldName, labelText, value, htmlOptional.ToString(),cssName:h.CssName,errorMessage: errorMessage);
+                        var html = ReplacerField(template, h.FieldName, labelText, value, htmlOptional.ToString(), cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
                         sb.Append(html);
                     }
 
@@ -608,7 +621,7 @@ namespace DynaForms
                     {
                         var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSubmit;
 
-                        var html = ReplacerField(template, h.FieldName, labelText, value,cssName: h.CssName, errorMessage: errorMessage);
+                        var html = ReplacerField(template, h.FieldName, labelText, value, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
                         sb.Append(html);
                     }
                     if (h.Type == InputType.hidden)
