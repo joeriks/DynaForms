@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample_Nancy", "Sample_Nanc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynaFormsPetaPoco", "DynaFormsPetaPoco\DynaFormsPetaPoco.csproj", "{67EA80D3-F0A6-4CCB-A0E6-0BE7094227BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynaFormsUmbraco", "DynaFormsUmbraco\DynaFormsUmbraco.csproj", "{09B5CDBA-3DA7-4D58-9B44-82D01EAECEE7}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = DynaForms.vsmdi
@@ -74,6 +76,10 @@ Global
 		{67EA80D3-F0A6-4CCB-A0E6-0BE7094227BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67EA80D3-F0A6-4CCB-A0E6-0BE7094227BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67EA80D3-F0A6-4CCB-A0E6-0BE7094227BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09B5CDBA-3DA7-4D58-9B44-82D01EAECEE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09B5CDBA-3DA7-4D58-9B44-82D01EAECEE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09B5CDBA-3DA7-4D58-9B44-82D01EAECEE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09B5CDBA-3DA7-4D58-9B44-82D01EAECEE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
