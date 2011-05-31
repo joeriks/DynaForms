@@ -546,22 +546,27 @@ namespace DynaForms
             // Create the Html tags for the form
             //
 
-            foreach (var h in Fields)
+            foreach (var f in Fields)
             {
 
-                if (h.Type == InputType.html)
+                if (f.Type == InputType.html)
                 {
-                    sb.Append(h.Html);
+                    sb.Append(f.Html);
                 }
                 else
                 {
 
-                    var labelText = h.Label();
+                    var labelText = f.Label();
 
                     string value = "";
-                    if (this.Model != null && this.ModelDictionary.ContainsKey(h.FieldName) && this.ModelDictionary[h.FieldName] != null)
+
+                    if (this.Model != null && this.ModelDictionary.ContainsKey(f.FieldName) && this.ModelDictionary[f.FieldName] != null)
                     {
-                        value = this.ModelDictionary[h.FieldName].ToString();
+                        value = this.ModelDictionary[f.FieldName].ToString();
+                    }
+                    else
+                    {
+                        value = f.DefaultValue.ToString();
                     }
 
                     errorMessage = "";
@@ -569,66 +574,66 @@ namespace DynaForms
                     {
                         foreach (var e in validationResult.Errors)
                         {
-                            if (e.Field == h.FieldName)
+                            if (e.Field == f.FieldName)
                             {
                                 if (errorMessage != "") errorMessage += ", ";
                                 errorMessage += e.Error;
                             }
                         }
                     }
-                    if (h.Type == InputType.text)
+                    if (f.Type == InputType.text)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateInputText;
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateInputText;
 
-                        var html = ReplacerField(template, h.FieldName, labelText, value,cssName:h.CssName,errorMessage: errorMessage,labelCssName:h.LabelCssName);
+                        var html = ReplacerField(template, f.FieldName, labelText, value,cssName:f.CssName,errorMessage: errorMessage,labelCssName:f.LabelCssName);
                         sb.Append(html);
                     }
-                    if (h.Type == InputType.textarea)
+                    if (f.Type == InputType.textarea)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateTextArea;
-                        var html = ReplacerField(template, h.FieldName, labelText, value, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateTextArea;
+                        var html = ReplacerField(template, f.FieldName, labelText, value, cssName: f.CssName, errorMessage: errorMessage, labelCssName: f.LabelCssName);
                         sb.Append(html);
                     }
-                    if (h.Type == InputType.checkbox)
+                    if (f.Type == InputType.checkbox)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateCheckbox;
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateCheckbox;
 
                         var boolValue = false;
                         Boolean.TryParse(value, out boolValue);
 
                         var optional = boolValue ? "checked='checked'" : "";
-                        var html = ReplacerField(template, h.FieldName, labelText, value, optional, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
+                        var html = ReplacerField(template, f.FieldName, labelText, value, optional, cssName: f.CssName, errorMessage: errorMessage, labelCssName: f.LabelCssName);
                         sb.Append(html);
 
                     }
 
-                    if (h.Type == InputType.select)
+                    if (f.Type == InputType.select)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSelect;
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateSelect;
 
                         var htmlOptional = new StringBuilder();
-                        foreach (var item in h.DropDownValueList)
+                        foreach (var item in f.DropDownValueList)
                         {
                             var optional = (item.Key != value) ? "selected='selected'" : "";
                             var htmlChild = ReplacerKeyValue(DynaFormTemplates.TemplateSelectOption, item.Key, item.Value, optional);
                             htmlOptional.Append(htmlChild);
                         }
-                        var html = ReplacerField(template, h.FieldName, labelText, value, htmlOptional.ToString(), cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
+                        var html = ReplacerField(template, f.FieldName, labelText, value, htmlOptional.ToString(), cssName: f.CssName, errorMessage: errorMessage, labelCssName: f.LabelCssName);
                         sb.Append(html);
                     }
 
-                    if (h.Type == InputType.submit)
+                    if (f.Type == InputType.submit)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateSubmit;
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateSubmit;
 
-                        var html = ReplacerField(template, h.FieldName, labelText, value, cssName: h.CssName, errorMessage: errorMessage, labelCssName: h.LabelCssName);
+                        var html = ReplacerField(template, f.FieldName, labelText, value, cssName: f.CssName, errorMessage: errorMessage, labelCssName: f.LabelCssName);
                         sb.Append(html);
                     }
-                    if (h.Type == InputType.hidden)
+                    if (f.Type == InputType.hidden)
                     {
-                        var template = (h.Template != "") ? h.Template : DynaFormTemplates.TemplateHidden;
+                        var template = (f.Template != "") ? f.Template : DynaFormTemplates.TemplateHidden;
 
-                        var html = ReplacerField(template, h.FieldName, labelText, value);
+                        var html = ReplacerField(template, f.FieldName, labelText, value:value);
                         sb.Append(html);
                     }
                 }

@@ -85,6 +85,7 @@ namespace DynaForms_Test
 
             form.AddFormField("name", cssName: "inputfield")
              .AddFormField("check", cssName: "inputfield", type: InputType.checkbox)
+             .AddFormField("hidden", type: InputType.hidden, defaultValue:"value")
              .AddFormField("value", cssName: "inputfield", type: InputType.textarea)
              .AddFormField("dropdown", cssName: "inputfield", type: InputType.select, dropDownValues: dropDownValues)
              .AddFormField("submit", cssName: "inputfield", type: InputType.submit);
@@ -93,6 +94,7 @@ namespace DynaForms_Test
             var expectedResult = System.IO.File.ReadAllText(fileName);
             Assert.AreEqual(expectedResult, form.Html().ToString());
         }
+
 
         [TestMethod]
         [DeploymentItem("resources//WithDataObject.htm")]
