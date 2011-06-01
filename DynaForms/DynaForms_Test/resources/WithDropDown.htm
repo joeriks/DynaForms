@@ -1,5 +1,4 @@
-<form id='WithDropDown' method='post' action='#'>
-
+<form id='WithDropDown' name='WithDropDown' action='#' method='post'>
  <div class='inputfield'>
   <label for='name'>name</label>
   <input type='text' id='name' name='name' value=''/>
@@ -8,11 +7,12 @@
   <label for='check'>check</label>
   <input type='checkbox' id='check' name='check'  value='False'/>
  </div>
+  <input type='hidden' id='hidden' name='hidden' value='value'/>
  <div class='inputfield'>
   <label for='value'>value</label>
   <textarea id='value' name='value'></textarea>
  </div>
- <div class='inputfield''>
+ <div class='inputfield'>
   <label for='dropdown'>dropdown</label>
   <select id='dropdown' name='dropdown'>
     <option value='1'>one</option>

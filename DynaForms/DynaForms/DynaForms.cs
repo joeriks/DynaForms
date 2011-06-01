@@ -159,7 +159,7 @@ namespace DynaForms
 
         }
 
-        public DynaForm(string name, object model = null, string cssName = "", bool autoAddSubmit = true)
+        public DynaForm(string name, object model = null, string cssName = "", bool autoAddSubmit = true, bool autoCreateModelFromFields = true)
         {
             Name = name;
             CssName = cssName;
@@ -183,7 +183,7 @@ namespace DynaForms
                 Model = model;
                 AutoPopulateModel = false;
             }
-            else
+            else if (autoCreateModelFromFields)
             {
                 Model = new ExpandoObject();
                 AutoPopulateModel = true;
@@ -310,7 +310,48 @@ namespace DynaForms
 
             return this;
         }
-        public DynaForms.DynaForm UpdateFormField(string fieldName, string labelText = null, InputType type = InputType.undefined, string cssName = null, bool? required = null, bool? email = null, bool? isNumeric = null, int? maxLength = null, int? minLength = null, int? max = null, int? min = null, string regEx = null, Dictionary<string, string> dropDownValues = null, string template = null, string errorMessage = null, object defaultValue = null, bool? updateModel = null)
+        public DynaForm UpdateFormField(FormField f, string labelText = null, InputType type = InputType.undefined, string cssName = null, bool? required = null, bool? email = null, bool? isNumeric = null, int? maxLength = null, int? minLength = null, int? max = null, int? min = null, string regEx = null, Dictionary<string, string> dropDownValues = null, string template = null, string errorMessage = null, object defaultValue = null, bool? updateModel = null)
+        {
+            if (labelText != null) f.LabelText = labelText;
+            if (type != InputType.undefined) f.Type = type;
+            if (cssName != null) f.CssName = cssName;
+            if (required != null) f.Required = required.GetValueOrDefault();
+            if (email != null) f.Email = email.GetValueOrDefault();
+            if (minLength != null) f.MinLength = minLength.GetValueOrDefault();
+            if (maxLength != null) f.MaxLength = maxLength.GetValueOrDefault();
+            if (regEx != null) f.RegEx = regEx ?? "";
+            if (min != null) f.Min = min;
+            if (max != null) f.Max = max;
+            if (template != null) f.Template = template ?? "";
+            if (dropDownValues != null) f.DropDownValueList = dropDownValues;
+            if (defaultValue != null) f.DefaultValue = defaultValue;
+            if (errorMessage != null) f.ErrorMessage = errorMessage ?? "";
+
+            if (this.AutoPopulateModel && this.Model.GetType() == typeof(ExpandoObject) && ModelDictionary.ContainsKey(f.FieldName))
+            {
+                if (f.Type == InputType.checkbox)
+                {
+                    defaultValue = defaultValue ?? false;
+                }
+                else if (min != null || max != null)
+                {
+                    defaultValue = defaultValue ?? 0;
+                }
+                else if (type == InputType.select && f.DropDownValueList != null)
+                {
+                    var ddl = (Dictionary<string, string>)f.DropDownValueList;
+                    defaultValue = ddl.FirstOrDefault().Value;
+                }
+                else
+                {
+                    defaultValue = defaultValue ?? "";
+                }
+                ModelDictionary[f.FieldName] = defaultValue;
+            }
+            
+            return this;
+        }
+        public DynaForm UpdateFormField(string fieldName, string labelText = null, InputType type = InputType.undefined, string cssName = null, bool? required = null, bool? email = null, bool? isNumeric = null, int? maxLength = null, int? minLength = null, int? max = null, int? min = null, string regEx = null, Dictionary<string, string> dropDownValues = null, string template = null, string errorMessage = null, object defaultValue = null, bool? updateModel = null)
         {
             var f = Fields.Where(w => w.FieldName == fieldName).SingleOrDefault();
             if (f == null)
@@ -334,6 +375,29 @@ namespace DynaForms
                 if (dropDownValues!=null) f.DropDownValueList = dropDownValues;
                 if (defaultValue!=null) f.DefaultValue = defaultValue;
                 if (errorMessage != null) f.ErrorMessage = errorMessage??"";
+
+                if (this.AutoPopulateModel && this.Model.GetType() == typeof(ExpandoObject) && ModelDictionary.ContainsKey(f.FieldName))
+                {
+                    if (f.Type == InputType.checkbox)
+                    {
+                        defaultValue = defaultValue ?? false;
+                    }
+                    else if (min != null || max != null)
+                    {
+                        defaultValue = defaultValue ?? 0;
+                    }
+                    else if (type == InputType.select && f.DropDownValueList != null)
+                    {
+                        var ddl = (Dictionary<string, string>)f.DropDownValueList;
+                        defaultValue = ddl.FirstOrDefault().Value;
+                    }
+                    else
+                    {
+                        defaultValue = defaultValue ?? "";
+                    }
+                    ModelDictionary[f.FieldName] = defaultValue;
+                }
+
                 
                 return this;
             }
@@ -417,7 +481,7 @@ namespace DynaForms
             set { validationResult = value; }
         }
 
-        public void ClearModel()
+        public void ResetToDefaultValues()
         {
             foreach (var f in Fields)
             {
@@ -495,8 +559,10 @@ namespace DynaForms
             this.validationResult = validationResult;
             return validationResult;
         }
-        public HtmlString Html(object model = null, string action = "#", string method = "post", bool omitFormTag = false, string formHeaderTemplate = "")
+        public HtmlString Html(object model = null, string action = "#", string method = "post", bool omitFormTag = false, string formHeaderTemplate = "", bool resetToDefaultValues = false)
         {
+            if (resetToDefaultValues)
+                this.ResetToDefaultValues();
 
             var sb = new StringBuilder();
             if (!omitFormTag)

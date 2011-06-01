@@ -95,6 +95,37 @@ namespace DynaForms_Test
             Assert.AreEqual(expectedResult, form.Html().ToString());
         }
 
+        [TestMethod]
+        [DeploymentItem("resources//SetDefaultValue.htm")]
+        public void FormCreation_DefaultValueOnAutoCreatedModel()
+        {
+            string formName = "SetDefaultValue";
+            string fileName = formName + ".htm";
+
+            // autoCreateModelFromFields is true by default, just setting it here for explicity
+
+            var form = new DynaForm(formName, autoCreateModelFromFields:true);
+            form.AddFormField("defaultvalue1");
+            form.AddFormField("defaultvalue2");
+            form.AddFormField("defaultvalue3");
+
+            // this default value will not be used in .Html() because it does not update the autocreated model
+            
+            form.Fields[0].DefaultValue = "default1";
+            form.Fields[0].Type = InputType.hidden;
+
+            // here are better ways to set default values in those cases
+
+            form.UpdateFormField("defaultvalue2", defaultValue: "default2", type:InputType.hidden);
+            form.UpdateFormField(form.Fields[2], defaultValue: "default3", type: InputType.hidden);
+
+            System.IO.File.WriteAllText(defaultOutputPath + fileName, form.Html().ToString());
+            var expectedResult = System.IO.File.ReadAllText(fileName);
+            Assert.AreEqual(expectedResult, form.Html().ToString());
+
+            
+
+        }
 
         [TestMethod]
         [DeploymentItem("resources//WithDataObject.htm")]

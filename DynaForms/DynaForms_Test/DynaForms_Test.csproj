@@ -66,6 +66,9 @@
     <Content Include="resources\FormCreation_CustomBasicTemplate.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\SetDefaultValue.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\Simple.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
